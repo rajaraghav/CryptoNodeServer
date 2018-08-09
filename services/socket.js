@@ -6,16 +6,27 @@ const io = (socketIo, redisAdapter) => {
 
 	//Server Socket Settings
 	socketIo.adapter(redisAdapter);
-	socketIo.on("connection", (socket) => {
-
-		console.log("conected tp", socket.id);
-		socket.emit("ssup", "hello");
-
-	});
 	//Server socket Settings end.
 
 	/* Server socket emits data to it's react clients on recieving data
 	   from cryptoCompare socket connection.
+	   These are the events you can listen to.
+	   	"TRADE",
+    	"FEEDNEWS",
+    	"CURRENT",
+    	"LOADCOMPLETE",
+    	"COINPAIRS",
+    	"CURRENTAGGREGATE",
+    	"TOPLIST",
+    	"TOPLISTCHANGE",
+    	"ORDERBOOK",
+    	"FULLORDERBOOK",
+    	"ACTIVATION",
+    	"FULLVOLUME",
+    	"TRADECATCHUP",
+    	"NEWSCATCHUP",
+    	"TRADECATCHUPCOMPLETE",
+    	"NEWSCATCHUPCOMPLETE"
 	*/
 	socketClient.on("m", (data) => {
 
