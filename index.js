@@ -28,4 +28,8 @@ const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */
 
 const port = PORT_NUM;
-server.listen(port);
+server.listen(port, () => {
+
+	console.log("node server running.");
+
+});
