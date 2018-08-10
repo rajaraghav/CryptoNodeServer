@@ -1,3 +1,4 @@
 module.exports = {
-  // enter prod keys here like...
+	redisHost: "localhost",
+	redisPort: 5001
 };

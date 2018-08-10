@@ -1,3 +1,4 @@
+let keys = require("./config/keys");
 const express = require("express");
 const app = express();
 /* eslint-disable */
@@ -12,10 +13,11 @@ app.use(cookieParser());
 const socketIO = require("socket.io");
 const socketRedis = require("socket.io-redis");
 /* eslint-disable */
-const REDIS_URL = process.env.REDIS_URL;
-const REDIS_KEY = process.env.REDIS_KEY || "client-socket";
 const io = socketIO(server);
-const redisAdapter = socketRedis(REDIS_URL, { key: REDIS_KEY });
+const redisAdapter = socketRedis({
+	host: keys.redisHost,
+	port: keys.redisPort
+});
 /* eslint-enable */
 
 //socket io cluster config
