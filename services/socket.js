@@ -7,7 +7,7 @@ const io = (socketIo, redisAdapter) => {
 	//Server Socket Settings
 	socketIo.adapter(redisAdapter);
 	//Server socket Settings end.
-	//unnecessary
+
 	/* Server socket emits data to it's react clients on recieving data
 	   from cryptoCompare socket connection.
 	   These are the events you can listen to.
