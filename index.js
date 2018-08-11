@@ -25,7 +25,7 @@ require("./services/socket").default(io, redisAdapter);
 
 app.get("/", (req, res) => {
 
-	res.send(42);
+	res.sendStatus(42);
 
 });
 /* eslint-disable */
