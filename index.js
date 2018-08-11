@@ -28,8 +28,22 @@ const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */
 
 const port = PORT_NUM;
-server.listen(port, () => {
+/* eslint-disable no-undef*/
+if (process.env.NODE_ENV === "production") {
 
-	console.log("node server running.");
+	server.listen(port, process.env.HOST_ADDRESS, () => {
 
-});
+		/* eslint-enable */
+		console.log("node server running.");
+
+	});
+
+} else {
+
+	server.listen(port, () => {
+
+		console.log("node server running.");
+
+	});
+
+}
