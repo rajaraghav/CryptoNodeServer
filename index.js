@@ -23,6 +23,11 @@ const redisAdapter = socketRedis({
 //socket io cluster config
 require("./services/socket").default(io, redisAdapter);
 
+app.get("/", (req, res) => {
+
+	res.send(42);
+
+});
 /* eslint-disable */
 const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */
