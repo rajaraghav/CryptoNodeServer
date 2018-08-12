@@ -23,6 +23,23 @@ const redisAdapter = socketRedis({
 //socket io cluster config
 require("./services/socket").default(io, redisAdapter);
 
+//cors setting
+app.use((req, res, next) => {
+
+	res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+	res.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET, POST, OPTIONS, PUT, PATCH, DELETE"
+	);
+	res.setHeader(
+		"Access-Control-Allow-Headers",
+		"Authorization, Origin, Content-Type, Accept"
+	);
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	next();
+
+});
+//cors setting
 app.get("/", (req, res) => {
 
 	res.send("42");
