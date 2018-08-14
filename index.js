@@ -1,3 +1,4 @@
+let keys = require("./config/keys");
 const express = require("express");
 const app = express();
 /* eslint-disable */
@@ -12,18 +13,59 @@ app.use(cookieParser());
 const socketIO = require("socket.io");
 const socketRedis = require("socket.io-redis");
 /* eslint-disable */
-const REDIS_URL = process.env.REDIS_URL;
-const REDIS_KEY = process.env.REDIS_KEY || "client-socket";
 const io = socketIO(server);
-const redisAdapter = socketRedis(REDIS_URL, { key: REDIS_KEY });
+const redisAdapter = socketRedis({
+	host: keys.redisHost,
+	port: keys.redisPort
+});
 /* eslint-enable */
 
 //socket io cluster config
 require("./services/socket").default(io, redisAdapter);
 
+//cors setting
+app.use((req, res, next) => {
+
+	res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+	res.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET, POST, OPTIONS, PUT, PATCH, DELETE"
+	);
+	res.setHeader(
+		"Access-Control-Allow-Headers",
+		"Authorization, Origin, Content-Type, Accept"
+	);
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	next();
+
+});
+//cors setting
+app.get("/", (req, res) => {
+
+	res.send("42");
+
+});
 /* eslint-disable */
 const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */
 
 const port = PORT_NUM;
-server.listen(port);
+/* eslint-disable no-undef*/
+if (process.env.NODE_ENV === "production") {
+
+	server.listen(port, process.env.HOST_ADDRESS, () => {
+
+		/* eslint-enable */
+		console.log("node server running.");
+
+	});
+
+} else {
+
+	server.listen(port, () => {
+
+		console.log("node server running.");
+
+	});
+
+}

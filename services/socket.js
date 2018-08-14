@@ -31,8 +31,12 @@ const io = (socketIo, redisAdapter) => {
 	socketClient.on("m", (data) => {
 
 		let unpackedData = CCC.CURRENT.unpack(data);
+		console.log(unpackedData);
 		let textType = CCC.STATIC.TYPE_INVERTED[unpackedData.TYPE];
 		unpackedData.TYPE = textType;
+		console.log(textType);
+		console.log(unpackedData);
+		console.log("done");
 		socketIo.emit(textType, unpackedData);
 
 	});
