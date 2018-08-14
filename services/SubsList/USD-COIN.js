@@ -1,3 +1,4 @@
+// usdt coins
 let coins = [
 	"BTC",
 	"ETH",
