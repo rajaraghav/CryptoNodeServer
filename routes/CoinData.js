@@ -12,7 +12,8 @@ module.exports = app => {
 	app.get("/api/coindata", async (req, res) => {
 		let from = getFSYMS(req.query.from);
 		let to = getTSYMS(req.query.to);
-		
+		console.log("from",from)
+		console.log("to",to)
 		for (let froms of from) {
 			fURL += froms + ",";
 		}
@@ -24,6 +25,7 @@ module.exports = app => {
 		tURL = tURL.substring(0, tURL.length - 1);
 		fURL=fURL.substring(0,fURL.length - 1)
 		let finalURL = baseURL + fURL + tURL;
+		console.log("FinalURL",finalURL);
 		let cryptoRes = await axios.get(finalURL);
 		let jsonCrypto = cryptoRes.data;
 		let coinRawData = jsonCrypto.RAW[from];
@@ -38,6 +40,7 @@ module.exports = app => {
 			data.LOW24HOUR = subData.LOW24HOUR;
 			data.CHANGE24HOUR = subData.CHANGE24HOUR;
 			data.VOLUME24HOUR = subData.VOLUME24HOUR;
+			data.CHANGEPCT24HOUR=subData.CHANGEPCT24HOUR;
 			finRes.push(data);
 		}
 		res.send(finRes);
