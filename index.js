@@ -19,7 +19,6 @@ const redisAdapter = socketRedis({
 	port: keys.redisPort
 });
 /* eslint-enable */
-
 //socket io cluster config
 require("./services/socket").default(io, redisAdapter);
 
@@ -45,6 +44,7 @@ app.get("/", (req, res) => {
 	res.send("42");
 
 });
+require("./routes/coindata")(app);
 /* eslint-disable */
 const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */
