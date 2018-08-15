@@ -5,12 +5,17 @@ let tURL = "&tsyms=";
 function getTSYMS(reqCurrencies) {
 	return reqCurrencies.split("~");
 }
+function getFSYMS(reqCurrencies) {
+	return reqCurrencies.split("~");
+}
 module.exports = app => {
 	app.get("/api/coindata", async (req, res) => {
-		let from = req.query.from;
+		let from = getFSYMS(req.query.from);
 		let to = getTSYMS(req.query.to);
-
-		fURL += from;
+		
+		for (let froms of from) {
+			fURL += froms + ",";
+		}
 		for (let tos of to) {
 			tURL += tos + ",";
 		}
