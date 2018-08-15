@@ -5,6 +5,7 @@ Exposes a socketClient
 
 */
 let subscriptionArr = require("./SubsList/subscriptions");
+
 let streamUrl = "https://streamer.cryptocompare.com/";
 let socketClient = require("socket.io-client")(streamUrl);
 socketClient.emit("SubAdd", { subs: subscriptionArr });
