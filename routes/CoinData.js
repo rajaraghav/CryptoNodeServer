@@ -1,7 +1,7 @@
 let axios = require("axios");
 let baseURL = "https://min-api.cryptocompare.com/data/pricemultifull?";
-let fURL = "fsyms=";
-let tURL = "&tsyms=";
+let fURL = "";
+let tURL = "";
 function getTSYMS(reqCurrencies) {
 	return reqCurrencies.split("~");
 }
@@ -14,6 +14,7 @@ module.exports = app => {
 		let to = getTSYMS(req.query.to);
 		console.log("from",from)
 		console.log("to",to)
+		fURL="",tURL="";
 		for (let froms of from) {
 			fURL += froms + ",";
 		}
@@ -24,7 +25,7 @@ module.exports = app => {
 		console.log("ToDAata",tURL)
 		tURL = tURL.substring(0, tURL.length - 1);
 		fURL=fURL.substring(0,fURL.length - 1)
-		let finalURL = baseURL + fURL + tURL;
+		let finalURL = baseURL + "fsyms="+fURL + "&tsyms="+tURL;
 		console.log("FinalURL",finalURL);
 		let cryptoRes = await axios.get(finalURL);
 		let jsonCrypto = cryptoRes.data;
