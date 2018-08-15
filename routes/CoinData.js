@@ -30,21 +30,26 @@ module.exports = app => {
 		let cryptoRes = await axios.get(finalURL);
 		let jsonCrypto = cryptoRes.data;
 		console.log("GETDATA",jsonCrypto);
-		let coinRawData = jsonCrypto.RAW[from];
+		
 		let finRes = [];
-		for (let key in coinRawData) {
-			let subData = coinRawData[key];
-			let data = {};
-			data.FROM = from;
-			data.TO = key;
-			data.PRICE = subData.PRICE;
-			data.HIGH24HOUR = subData.HIGH24HOUR;
-			data.LOW24HOUR = subData.LOW24HOUR;
-			data.CHANGE24HOUR = subData.CHANGE24HOUR;
-			data.VOLUME24HOUR = subData.VOLUME24HOUR;
-			data.CHANGEPCT24HOUR=subData.CHANGEPCT24HOUR;
-			finRes.push(data);
+		for (let froms of from) {
+			let coinRawData = jsonCrypto.RAW[froms];
+			console.log("coinRawData",coinRawData);
+			for (let key in coinRawData) {
+				let subData = coinRawData[key];
+				let data = {};
+				data.FROM = from;
+				data.TO = key;
+				data.PRICE = subData.PRICE;
+				data.HIGH24HOUR = subData.HIGH24HOUR;
+				data.LOW24HOUR = subData.LOW24HOUR;
+				data.CHANGE24HOUR = subData.CHANGE24HOUR;
+				data.VOLUME24HOUR = subData.VOLUME24HOUR;
+				data.CHANGEPCT24HOUR=subData.CHANGEPCT24HOUR;
+				finRes.push(data);
+			}
 		}
+		
 		res.send(finRes);
 	});
 };
