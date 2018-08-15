@@ -1,18 +1,19 @@
 module.exports = [
-	//"Cryptsy",
-	//"BTCChina",
-	"Bitstamp",
-	//"BTER",
-	//"OKCoin",
-	"Coinbase",
-	//"Poloniex",
-	//"Cexio",
-	//"BTCE",
-	//"BitTrex",
-	"Kraken",
-	"Bitfinex",
-	//"Yacuna",
-	//"LocalBitcoins",
+	"Bitfinex"
+	// "Cryptsy",
+	// "BTCChina",
+	// "Bitstamp",
+	// "BTER",
+	// "OKCoin",
+	// "Coinbase",
+	// "Poloniex",
+	// "Cexio",
+	// "BTCE",
+	// "BitTrex",
+	// "Kraken",
+	// "Bitfinex",
+	// "Yacuna",
+	// "LocalBitcoins",
 	// "Yunbi",
 	// "itBit",
 	// "HitBTC",
@@ -63,12 +64,12 @@ module.exports = [
 	// "EthexIndia",
 	// "Bithumb",
 	// "CHBTC",
-	//"ViaBTC",
+	// "ViaBTC",
 	// "Jubi",
 	// "Zaif",
 	// "Novaexchange",
 	// "WavesDEX",
-	"Binance"
+	// "Binance",
 	// "Lykke",
 	// "Remitano",
 	// "Coinroom",
@@ -156,11 +157,4 @@ module.exports = [
 	// "Zecoex"
 ];
 //define your exchanges here
-module.exports.default = [
-	"Binance",
-	"Coinbase",
-	"Kraken",
-	"Bitfinex",
-	"Bitstamp"
-
-];
+module.exports.default = ["Bitfinex"];

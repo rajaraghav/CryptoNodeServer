@@ -86,8 +86,8 @@ module.exports = [
 	"CIN",
 	"CINNI",
 	"CXC",
-	"CLAM",
-	"CLOAK"
+	"CLAM"
+	// "CLOAK",
 	// "CLR",
 	// "CMC",
 	// "CNC",
@@ -111,7 +111,7 @@ module.exports = [
 	// "EXCL",
 	// "EXE",
 	// "EZC",
-	// "FLAP",
+	// "FLAP"
 	// "FC2",
 	// "FFC",
 	// "FIBRE",
@@ -2875,10 +2875,6 @@ module.exports = [
 ];
 // your preferred coins here.
 module.exports.default = [
-	"NXT",
-	"FLP",
-	"UBEX",
-	"DBCCOIN",
 	"BTC",
 	"ETH",
 	"LTC",
@@ -2956,6 +2952,5 @@ module.exports.default = [
 	"CIN",
 	"CINNI",
 	"CXC",
-	"CLAM",
-	"CLOAK"
+	"CLAM"
 ];

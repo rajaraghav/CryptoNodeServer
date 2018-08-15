@@ -653,4 +653,4 @@ CCC.convertValueToDisplay = function(symbol, value, type, fullNumbers) {
 		);
 	}
 };
-module.exports = CCC; 
+module.exports = CCC;
