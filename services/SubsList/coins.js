@@ -86,7 +86,8 @@ module.exports = [
 	"CIN",
 	"CINNI",
 	"CXC",
-	"CLAM"
+	"CLAM",
+	"USDT"
 	// "CLOAK",
 	// "CLR",
 	// "CMC",
@@ -2952,5 +2953,6 @@ module.exports.default = [
 	"CIN",
 	"CINNI",
 	"CXC",
-	"CLAM"
+	"CLAM",
+	"USDT"
 ];
