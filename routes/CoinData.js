@@ -38,7 +38,7 @@ module.exports = app => {
 			for (let key in coinRawData) {
 				let subData = coinRawData[key];
 				let data = {};
-				data.FROM = from;
+				data.FROM = froms;
 				data.TO = key;
 				data.PRICE = subData.PRICE;
 				data.HIGH24HOUR = subData.HIGH24HOUR;
