@@ -29,6 +29,7 @@ module.exports = app => {
 		console.log("FinalURL",finalURL);
 		let cryptoRes = await axios.get(finalURL);
 		let jsonCrypto = cryptoRes.data;
+		console.log("GETDATA",jsonCrypto);
 		let coinRawData = jsonCrypto.RAW[from];
 		let finRes = [];
 		for (let key in coinRawData) {
