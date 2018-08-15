@@ -16,10 +16,13 @@ module.exports = app => {
 		for (let froms of from) {
 			fURL += froms + ",";
 		}
+		console.log("FromData",fURL)
 		for (let tos of to) {
 			tURL += tos + ",";
 		}
+		console.log("ToDAata",tURL)
 		tURL = tURL.substring(0, tURL.length - 1);
+		fURL=fURL.substring(0,fURL.length - 1)
 		let finalURL = baseURL + fURL + tURL;
 		let cryptoRes = await axios.get(finalURL);
 		let jsonCrypto = cryptoRes.data;
