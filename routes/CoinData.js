@@ -44,7 +44,7 @@ module.exports = app => {
 				data.HIGH24HOUR = subData.HIGH24HOUR;
 				data.LOW24HOUR = subData.LOW24HOUR;
 				data.CHANGE24HOUR = subData.CHANGE24HOUR;
-				data.VOLUME24HOUR = subData.VOLUME24HOUR;
+				data.VOLUME24HOUR = subData.TOTALVOLUME24HTO;
 				data.CHANGEPCT24HOUR=subData.CHANGEPCT24HOUR;
 				finRes.push(data);
 			}
