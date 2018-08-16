@@ -1,5 +1,5 @@
 module.exports = [
-	"Bitfinex"
+	"Bitfinex",
 	// "Cryptsy",
 	// "BTCChina",
 	// "Bitstamp",
@@ -69,7 +69,7 @@ module.exports = [
 	// "Zaif",
 	// "Novaexchange",
 	// "WavesDEX",
-	// "Binance",
+	"Binance"
 	// "Lykke",
 	// "Remitano",
 	// "Coinroom",
@@ -157,4 +157,4 @@ module.exports = [
 	// "Zecoex"
 ];
 //define your exchanges here
-module.exports.default = ["Bitfinex"];
+module.exports.default = ["Binance"];
