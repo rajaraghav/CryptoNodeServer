@@ -2,17 +2,22 @@ let axios = require("axios");
 let baseURL = "https://min-api.cryptocompare.com/data/pricemultifull?";
 let fURL = "fsyms=";
 let tURL = "&tsyms=";
-function getTSYMS(reqCurrencies) {
+function getTSYMS (reqCurrencies) {
+
 	return reqCurrencies.split("~");
+
 }
-module.exports = app => {
+module.exports = (app) => {
+
 	app.get("/api/coindata", async (req, res) => {
+
 		let from = req.query.from;
 		let to = getTSYMS(req.query.to);
-
 		fURL += from;
 		for (let tos of to) {
-			tURL += tos + ",";
+
+			tURL += `${tos},`;
+
 		}
 		tURL = tURL.substring(0, tURL.length - 1);
 		let finalURL = baseURL + fURL + tURL;
@@ -21,6 +26,7 @@ module.exports = app => {
 		let coinRawData = jsonCrypto.RAW[from];
 		let finRes = [];
 		for (let key in coinRawData) {
+
 			let subData = coinRawData[key];
 			let data = {};
 			data.FROM = from;
@@ -31,7 +37,10 @@ module.exports = app => {
 			data.CHANGE24HOUR = subData.CHANGE24HOUR;
 			data.VOLUME24HOUR = subData.VOLUME24HOUR;
 			finRes.push(data);
+
 		}
 		res.send(finRes);
+
 	});
+
 };
