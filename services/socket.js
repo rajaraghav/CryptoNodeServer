@@ -38,7 +38,7 @@ const io = (socketIo, redisAdapter) => {
 			//	console.log(unpackedData);
 			//	console.log("done");
 		}
-		//socketIo.emit(textType, unpackedData);
+		socketIo.emit(textType, unpackedData);
 
 	});
 
