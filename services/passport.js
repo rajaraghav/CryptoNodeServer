@@ -1,41 +1,78 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const mongoose = require('mongoose');
-const keys = require('../config/keys');
-const User = mongoose.model('User');
+var bcrypt = require("bcrypt");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const mongoose = require("mongoose");
+const keys = require("../config/keys");
+const saltRounds = 10;
+const User = mongoose.model("Users");
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+	done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).then(user => {
-    done(null, user);
-  });
+	User.findById(id).then(user => {
+		done(null, user);
+	});
 });
 
 passport.use(
-  new GoogleStrategy(
-    {
-      callbackURL: '/auth/google/callback',
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      proxy: true
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        const existingUser = await User.findOne({ googleId: profile.id });
-        if (existingUser) {
-          return done(null, existingUser);
-        }
-        const user = await new User({
-          googleId: profile.id,
-          displayName: profile.displayName
-        }).save();
-        done(null, user);
-      } catch (err) {
-        done(err, null);
-      }
-    }
-  )
+	"local-signup",
+	new LocalStrategy(
+		{
+			usernameField: "email",
+			passwordField: "password",
+			passReqToCallback: true
+		},
+		async (req, email, password, done) => {
+			try {
+				const existingUser = await User.findOne({ email: email });
+
+				if (existingUser) {
+					return done(null, false);
+				}
+
+				bcrypt.hash(password, saltRounds, async function(err, hash) {
+					if (err) return done(err, null);
+					let newUser = {
+						email: email,
+						password: hash
+					};
+					const user = await new User(newUser).save();
+					done(null, user);
+				});
+			} catch (err) {
+				done(err, null);
+			}
+		}
+	)
+);
+
+passport.use(
+	"local-login",
+	new LocalStrategy(
+		{
+			usernameField: "email",
+			passwordField: "password",
+			passReqToCallback: true
+		},
+		async (req, email, password, done) => {
+			try {
+				const existingUser = await User.findOne({ email: email });
+				console.log(password);
+				if (existingUser) {
+					console.log(existingUser);
+					bcrypt.compare(password, existingUser.password, function(err, res) {
+						if (err) return done(err, null);
+						console.log(res);
+						if (!res) return done(null, false);
+
+						return done(null, existingUser);
+					});
+				}
+			} catch (err) {
+				done(err, null);
+			}
+		}
+	)
 );
