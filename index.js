@@ -6,11 +6,16 @@ const app = express();
 const server = require("http").Server(app);
 /* eslint-enable */
 var cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 const mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cookieSession({
+	keys: [keys.cookieKey],
+	maxAge: 30 * 24 * 60 * 60 * 1000
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 

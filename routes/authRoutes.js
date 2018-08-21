@@ -4,7 +4,9 @@ module.exports = (app, passport) => {
 
 		let currUser = {
 			email: req.user.email,
+			/* eslint-disable */
 			id: req.user._id
+			/* eslint-enable */
 		};
 		res.send(currUser);
 
