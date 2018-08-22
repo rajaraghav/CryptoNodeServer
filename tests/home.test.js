@@ -8,7 +8,7 @@ beforeEach(async () => {
 test("server running", async () => {
 	let serverRep = await page.getContentOf("body");
 	console.log(serverRep);
-	expect(serverRep).toEqual("43");
+	expect(serverRep).toEqual("42");
 });
 afterEach(async () => {
 	await page.close();
