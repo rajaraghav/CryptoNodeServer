@@ -18,6 +18,7 @@ class Page {
 	constructor(page) {
 		this.page = page;
 	}
+	//login
 	async login() {
 		const user = await userFactory();
 		const { session, sig } = sessionFactory(user);
