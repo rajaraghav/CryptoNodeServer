@@ -15,6 +15,6 @@ install:
 notifications:
   slack: webexchange:2A0pvs6b8GEwERGSKU50Uj2K
 script:
-  - nohup npm run devserver &
+  - nohup npm run start &
   - sleep 3
   - npm test
