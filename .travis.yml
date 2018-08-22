@@ -12,8 +12,8 @@ cache:
     - node_modules
 install:
   - npm install
- notifications:
-    slack: webexchange:2A0pvs6b8GEwERGSKU50Uj2K  
+notifications:
+  slack: webexchange:2A0pvs6b8GEwERGSKU50Uj2K
 script:
   - nohup npm run devserver &
   - sleep 3
