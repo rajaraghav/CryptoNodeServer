@@ -25,7 +25,7 @@ class Page {
 		await this.page.setCookie({ name: "session.sig", value: sig });
 		await this.page.goto("http://localhost:5000");
 	}
-	getContentOf(selector) {
+	async getContentOf(selector) {
 		return this.page.$eval(selector, el => el.innerHTML);
 	}
 }

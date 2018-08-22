@@ -13,7 +13,7 @@
 		"start": "node index.js",
 		"devserver": "nodemon index.js",
 		"prodserver": "NODE_ENV=production node index.js",
-		"test": "jest "
+		"test": "jest"
 	},
 	"dependencies": {
 		"babel-eslint": "^8.2.6",
