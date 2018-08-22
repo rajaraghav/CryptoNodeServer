@@ -6,10 +6,14 @@
 		"node": "9.3.0",
 		"npm": "5.5.1"
 	},
+	"jest": {
+		"setupTestFrameworkScriptFile": "./tests/setup.js"
+	},
 	"scripts": {
 		"start": "node index.js",
 		"devserver": "nodemon index.js",
-		"prodserver": "NODE_ENV=production node index.js"
+		"prodserver": "NODE_ENV=production node index.js",
+		"test": "jest "
 	},
 	"dependencies": {
 		"babel-eslint": "^8.2.6",
