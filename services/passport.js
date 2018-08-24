@@ -29,7 +29,7 @@ passport.use(
 				const existingUser = await User.findOne({ email: email });
 
 				if (existingUser) {
-					return done(null, false);
+					return done(JSON.stringify({ message: "already exists" }), false);
 				}
 
 				bcrypt.hash(password, saltRounds, async function(err, hash) {
@@ -39,10 +39,10 @@ passport.use(
 						password: hash
 					};
 					const user = await new User(newUser).save();
-					done(null, user);
+					return done(null, user);
 				});
 			} catch (err) {
-				done(err, null);
+				return done(err, null);
 			}
 		}
 	)

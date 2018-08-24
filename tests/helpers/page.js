@@ -26,6 +26,40 @@ class Page {
 		await this.page.setCookie({ name: "session.sig", value: sig });
 		await this.page.goto("http://localhost:5000");
 	}
+	get(path, body) {
+		return this.page.evaluate(_path => {
+			return fetch(_path, {
+				method: "GET",
+				credentials: "same-origin",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			}).then(res => res.json());
+		}, path);
+	}
+	post(path, body) {
+		return this.page.evaluate(
+			(_path, _body) => {
+				console.log(_body);
+				return fetch(_path, {
+					method: "POST",
+					body: JSON.stringify(_body),
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				}).then(res => {
+					try {
+						return res.json();
+					} catch (exp) {
+						return res;
+					}
+				});
+			},
+			path,
+			body
+		);
+	}
 	async getContentOf(selector) {
 		return this.page.$eval(selector, el => el.innerHTML);
 	}

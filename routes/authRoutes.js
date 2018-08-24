@@ -13,7 +13,7 @@ module.exports = (app, passport) => {
 	});
 	app.post("/signup", passport.authenticate("local-signup"), (req, res) => {
 
-		res.sendStatus(200);
+		res.send({ success: true });
 
 	});
 
