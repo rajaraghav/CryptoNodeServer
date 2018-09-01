@@ -2,6 +2,7 @@ var bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
+const { speakEasyValueGenerator } = require("./speakEasySecret");
 const keys = require("../config/keys");
 const saltRounds = 10;
 const User = mongoose.model("Users");
@@ -34,11 +35,16 @@ passport.use(
 
 				bcrypt.hash(password, saltRounds, async function(err, hash) {
 					if (err) return done(err, null);
+					let speakEasyObj = speakEasyValueGenerator(req.user.email);
+					console.log(speakEasyObj);
 					let newUser = {
 						email: email,
-						password: hash
+						otpAuthUrl: speakEasyObj.otpAuthURL,
+						password: hash,
+						twofaSecret: speakEasyObj.value
 					};
 					const user = await new User(newUser).save();
+					console.log(user);
 					return done(null, user);
 				});
 			} catch (err) {
