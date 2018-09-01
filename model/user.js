@@ -5,7 +5,8 @@ let UserSchema = new Schema({
 	email: String,
 	lastIP: String,
 	lastLogin: String,
-	password: String
+	password: String,
+	twofaSecret: String
 });
 // UserSchema.methods.generateHash = (password) => {
 

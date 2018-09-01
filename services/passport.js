@@ -2,9 +2,15 @@ var bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
+const speakeasy = require("speakeasy");
 const keys = require("../config/keys");
 const saltRounds = 10;
 const User = mongoose.model("Users");
+
+const generateSecret = () => {
+	var secret = speakeasy.generateSecret({ length: 20 });
+	return secret.base32;
+};
 
 passport.serializeUser((user, done) => {
 	done(null, user.id);
@@ -36,7 +42,8 @@ passport.use(
 					if (err) return done(err, null);
 					let newUser = {
 						email: email,
-						password: hash
+						password: hash,
+						twofaSecret: generateSecret()
 					};
 					const user = await new User(newUser).save();
 					return done(null, user);

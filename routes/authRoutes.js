@@ -13,7 +13,8 @@ module.exports = (app, passport) => {
 	});
 	app.post("/signup", passport.authenticate("local-signup"), (req, res) => {
 
-		res.send({ success: true });
+		//res.send({ success: true });
+		res.send(req.user);
 
 	});
 
