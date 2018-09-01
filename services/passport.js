@@ -35,7 +35,7 @@ passport.use(
 
 				bcrypt.hash(password, saltRounds, async function(err, hash) {
 					if (err) return done(err, null);
-					let speakEasyObj = speakEasyValueGenerator();
+					let speakEasyObj = speakEasyValueGenerator(req.user.email);
 					console.log(speakEasyObj);
 					let newUser = {
 						email: email,

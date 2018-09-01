@@ -1,31 +1,22 @@
 const speakeasy = require("speakeasy");
+const generateOAuthUrl = (userSecret, userEmail) => speakeasy.otpauthURL({
+	algorithm: "sha512",
+	label: `WebExchange ${userEmail}`,
+	secret: userSecret
+});
 
 const generateSecret = () => speakeasy.generateSecret({ length: 20 });
-const generateSecret32 = () => {
+const generateSecret32 = (userEmail) => {
 
-	let speakEasySecret = speakeasy.generateSecret({ length: 20 });
+	let speakEasySecret = generateSecret();
 	let secretObj = {
-		otpAuthURL: speakEasySecret.otpauth_url,
+		otpAuthURL: generateOAuthUrl(speakEasySecret.base32, userEmail),
 		value: speakEasySecret.base32
 	};
-return speakEasyObj;
+return secretObj;
 
 };
 const verify = (authObj) => speakeasy.totp.verify(authObj);
-const generateOAuthUrl = (userSecret) => {
-
-	let otpAuthUrlObj = {
-		oAuthUrl: speakeasy.otpauthURL({
-			algorithm: "sha512",
-			label: "WebExchange",
-			secret: userSecret
-		}),
-		secretKey: userSecret
-	};
-	/*eslint-disable newline-before-return*/
-	return otpAuthUrlObj;
-
-};
 module.exports = generateSecret;
 module.exports.speakEasyVerifier = verify;
 module.exports.speakEasyValueGenerator = generateSecret32;
