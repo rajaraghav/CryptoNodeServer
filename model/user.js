@@ -5,6 +5,7 @@ let UserSchema = new Schema({
 	email: String,
 	lastIP: String,
 	lastLogin: String,
+	otpAuthUrl: String,
 	password: String,
 	twofaSecret: String
 });

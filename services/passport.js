@@ -35,12 +35,16 @@ passport.use(
 
 				bcrypt.hash(password, saltRounds, async function(err, hash) {
 					if (err) return done(err, null);
+					let speakEasyObj = speakEasyValueGenerator();
+					console.log(speakEasyObj);
 					let newUser = {
 						email: email,
+						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
-						twofaSecret: speakEasyValueGenerator()
+						twofaSecret: speakEasyObj.value
 					};
 					const user = await new User(newUser).save();
+					console.log(user);
 					return done(null, user);
 				});
 			} catch (err) {

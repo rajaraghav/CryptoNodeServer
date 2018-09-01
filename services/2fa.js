@@ -1,10 +1,12 @@
 var QRCode = require("qrcode");
-QRCode.toDataURL(secret.otpauth_url, (err, data_url) => {
 
-	console.log(data_url);
+let qrGenerator = (userSecretUrl, userSecretKey, callback) => {
 
-	// Display this data URL to the user in an <img> tag
-	// Example:
-	write(`<img src="${data_url}">`);
+	QRCode.toDataURL(userSecretUrl, (err, dataUrl) => {
 
-});
+		callback(err, dataUrl, userSecretKey);
+
+	});
+
+};
+module.exports = qrGenerator;
