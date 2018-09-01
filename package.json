@@ -35,7 +35,8 @@
 		"safe-buffer": "^5.1.2",
 		"socket.io": "^2.1.1",
 		"socket.io-client": "^2.1.1",
-		"socket.io-redis": "^5.2.0"
+		"socket.io-redis": "^5.2.0",
+		"speakeasy": "^2.0.0"
 	},
 	"author": "Raja",
 	"license": "ISC",
