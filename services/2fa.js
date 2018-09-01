@@ -1,4 +1,4 @@
-var QRCode = require("qrcode");// Get the data URL of the authenticator URL
+var QRCode = require("qrcode");
 QRCode.toDataURL(secret.otpauth_url, (err, data_url) => {
 
 	console.log(data_url);
