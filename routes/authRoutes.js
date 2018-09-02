@@ -24,12 +24,15 @@ module.exports = (app, passport) => {
 
 		}
 	);
-	app.post("/signup", passport.authenticate("local-signup"), (req, res) => {
+	app.post(
+		"/signup",
+		passport.authenticate("local-signup", { session: false }),
+		(req, res) => {
 
-		res.send("success");
-		//res.send({ success: true });
+			res.json({ success: true });
 
-	});
+		}
+	);
 	app.post("/verify_2fa", (req, res) => {
 
 		let userToken = req.body.googleToken;

@@ -1,5 +1,6 @@
 let Page = require("./helpers/page");
 let page;
+let rand = Math.round(Math.random() * 20000);
 beforeEach(async () => {
 	page = await Page.build();
 	await page.goto("http://localhost:5000");
@@ -10,8 +11,7 @@ test("server running", async () => {
 	console.log(serverRep);
 });
 test("signup works", async () => {
-	let rand = Math.round(Math.random() * 20000);
-	let email = "rajx@aarus.com";
+	let email = "raja@aarus.com" + rand;
 	let password = "password";
 	let serverRep = await page.post("/signup", {
 		email,
@@ -19,8 +19,9 @@ test("signup works", async () => {
 	});
 });
 test("login works", async () => {
+	let email = "raja@aarus.com" + rand;
 	let serverRep = await page.post("/login", {
-		email: "raja@aarus.com",
+		email,
 		password: "password"
 	});
 });

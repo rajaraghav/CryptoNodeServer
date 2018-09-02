@@ -40,7 +40,6 @@ class Page {
 	post(path, body) {
 		return this.page.evaluate(
 			(_path, _body) => {
-				console.log(_body);
 				return fetch(_path, {
 					method: "POST",
 					body: JSON.stringify(_body),
@@ -48,13 +47,7 @@ class Page {
 					headers: {
 						"Content-Type": "application/json"
 					}
-				}).then(res => {
-					try {
-						return res.json();
-					} catch (exp) {
-						return res;
-					}
-				});
+				}).then(res => res.json());
 			},
 			path,
 			body

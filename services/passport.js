@@ -10,16 +10,6 @@ const keys = require("../config/keys");
 const saltRounds = 10;
 const User = mongoose.model("Users");
 
-passport.serializeUser((user, done) => {
-	done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-	User.findById(id).then(user => {
-		done(null, user);
-	});
-});
-
 passport.use(
 	new JWTStrategy(
 		{
@@ -51,13 +41,12 @@ passport.use(
 				const existingUser = await User.findOne({ email: email });
 
 				if (existingUser) {
-					return done(JSON.stringify({ message: "already exists" }), false);
+					return done(null, false);
 				}
 
 				bcrypt.hash(password, saltRounds, async function(err, hash) {
 					if (err) return done(err, null);
-					let speakEasyObj = speakEasyValueGenerator(req.user.email);
-					console.log(speakEasyObj);
+					let speakEasyObj = speakEasyValueGenerator(email);
 					let newUser = {
 						email: email,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
@@ -65,7 +54,6 @@ passport.use(
 						twofaSecret: speakEasyObj.value
 					};
 					const user = await new User(newUser).save();
-					console.log(user);
 					return done(null, user);
 				});
 			} catch (err) {
