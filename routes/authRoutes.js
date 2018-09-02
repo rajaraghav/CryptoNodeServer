@@ -1,27 +1,38 @@
 const qrGenerator = require("../services/2fa");
+const jwt = require("jsonwebtoken");
+const keys = require("../config/keys");
 const { speakEasyVerifier } = require("../services/speakEasySecret");
 /* eslint-disable max-lines-per-function */
 module.exports = (app, passport) => {
 
-	app.post("/login", passport.authenticate("local-login"), (req, res) => {
+	app.post(
+		"/login",
+		passport.authenticate("local-login", { session: false }),
+		(req, res) => {
 
-		let currUser = {
-			email: req.user.email,
-			/* eslint-disable */
-			id: req.user._id
-			/* eslint-enable */
-		};
-		res.send(currUser);
+			let currUser = {
+				email: req.user.email,
+				/* eslint-disable */
+				id: req.user._id
+				/* eslint-enable */
+			};
+			const token = jwt.sign(currUser, keys.jwtKey);
+			res.json({
+				token,
+				user: currUser
+			});
 
-	});
+		}
+	);
 	app.post("/signup", passport.authenticate("local-signup"), (req, res) => {
 
-		res.send({ success: true });
+		res.send("success");
+		//res.send({ success: true });
 
 	});
 	app.post("/verify_2fa", (req, res) => {
 
-		let userToken = req.body.token;
+		let userToken = req.body.googleToken;
 		let secret = req.user.twofaSecret;
 
 		var authObj = {
@@ -40,26 +51,30 @@ module.exports = (app, passport) => {
 		}
 
 	});
-	app.get("/get_twofaqr", (req, res) => {
+	app.get(
+		"/get_twofaqr",
+		passport.authenticate("jwt", { session: false }),
+		(req, res) => {
 
-		qrGenerator(
-			req.user.otpAuthUrl,
-			req.user.twofaSecret,
-			(err, imgsrc, otpAuthSecretKey) => {
+			qrGenerator(
+				req.user.otpAuthUrl,
+				req.user.twofaSecret,
+				(err, imgsrc, otpAuthSecretKey) => {
 
-				if (err) {
+					if (err) {
 
-					res.sendStatus(500).send("error");
+						res.sendStatus(500).send("error");
+
+					}
+					res.send({
+						imgsrc,
+						otpAuthSecretKey
+					});
 
 				}
-				res.send({
-					imgsrc,
-					otpAuthSecretKey
-				});
+			);
 
-			}
-		);
-
-	});
+		}
+	);
 
 };

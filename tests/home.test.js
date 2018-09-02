@@ -11,7 +11,7 @@ test("server running", async () => {
 });
 test("signup works", async () => {
 	let rand = Math.round(Math.random() * 20000);
-	let email = "raja@aarus.com";
+	let email = "rajx@aarus.com";
 	let password = "password";
 	let serverRep = await page.post("/signup", {
 		email,

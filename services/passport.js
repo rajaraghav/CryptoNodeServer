@@ -1,6 +1,9 @@
 var bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const passportJWT = require("passport-jwt");
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 const mongoose = require("mongoose");
 const { speakEasyValueGenerator } = require("./speakEasySecret");
 const keys = require("../config/keys");
@@ -17,6 +20,24 @@ passport.deserializeUser((id, done) => {
 	});
 });
 
+passport.use(
+	new JWTStrategy(
+		{
+			jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+			secretOrKey: keys.jwtKey
+		},
+		async (jwtPayload, done) => {
+			try {
+				const user = await User.findOne({ _id: jwtPayload.id });
+				if (user) {
+					return done(null, user);
+				} else return done(null, false);
+			} catch (err) {
+				done(err, null);
+			}
+		}
+	)
+);
 passport.use(
 	"local-signup",
 	new LocalStrategy(
@@ -65,12 +86,9 @@ passport.use(
 		async (req, email, password, done) => {
 			try {
 				const existingUser = await User.findOne({ email: email });
-				console.log(password);
 				if (existingUser) {
-					console.log(existingUser);
 					bcrypt.compare(password, existingUser.password, function(err, res) {
 						if (err) return done(err, null);
-						console.log(res);
 						if (!res) return done(null, false);
 
 						return done(null, existingUser);
