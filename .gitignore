@@ -2,3 +2,5 @@
 config/dev.js
 node_modules
 .env
+
+readme.todo
