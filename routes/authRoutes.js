@@ -16,7 +16,9 @@ module.exports = (app, passport) => {
 				id: req.user._id
 				/* eslint-enable */
 			};
-			const token = jwt.sign(currUser, keys.jwtKey);
+			const token = jwt.sign(currUser, keys.jwtKey, {
+				expiresIn: 48 * 60 * 60 //define time here.
+			});
 			res.json({
 				token,
 				user: currUser
