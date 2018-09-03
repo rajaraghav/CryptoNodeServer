@@ -6,7 +6,7 @@ module.exports = {
 	},
 	extends: "eslint:recommended",
 	parserOptions: {
-		ecmaVersion: 2015,
+		ecmaVersion: 8,
 		sourceType: "module"
 	},
 	rules: {
@@ -84,7 +84,6 @@ module.exports = {
 		"new-cap": "error",
 		"new-parens": "error",
 		"newline-after-var": ["error", "never"],
-		"newline-before-return": "error",
 		"newline-per-chained-call": "error",
 		"no-alert": "error",
 		"no-array-constructor": "error",

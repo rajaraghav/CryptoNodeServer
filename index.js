@@ -66,7 +66,7 @@ const port = PORT_NUM;
 /* eslint-disable no-undef*/
 if (process.env.NODE_ENV === "production") {
 
-	server.listen(port, process.env.HOST_ADDRESS, () => {
+	server.listen(port, () => {
 
 		/* eslint-enable */
 		console.log("node server running.");

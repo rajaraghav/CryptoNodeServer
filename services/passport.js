@@ -9,56 +9,77 @@ const { speakEasyValueGenerator } = require("./speakEasySecret");
 const keys = require("../config/keys");
 const saltRounds = 10;
 const User = mongoose.model("Users");
+passport.use(new JWTStrategy(
+	{
+		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+		secretOrKey: keys.jwtKey
+	},
+	async (jwtPayload, done) => {
 
-passport.use(
-	new JWTStrategy(
-		{
-			jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-			secretOrKey: keys.jwtKey
-		},
-		async (jwtPayload, done) => {
-			try {
-				const user = await User.findOne({ _id: jwtPayload.id });
-				if (user) {
-					return done(null, user);
-				} else return done(null, false);
-			} catch (err) {
-				done(err, null);
+		try {
+
+			const user = await User.findOne({ _id: jwtPayload.id });
+			if (user) {
+
+				return done(null, user);
+
 			}
+
+			return done(null, false);
+
+		} catch (err) {
+
+			done(err, null);
+
 		}
-	)
-);
+
+	}
+));
 passport.use(
 	"local-signup",
 	new LocalStrategy(
 		{
-			usernameField: "email",
+			passReqToCallback: true,
 			passwordField: "password",
-			passReqToCallback: true
+			usernameField: "email"
 		},
-		async (req, email, password, done) => {
-			try {
-				const existingUser = await User.findOne({ email: email });
+		/* eslint-disable max-params */
 
+		async (req, email, password, done) => {
+
+			try {
+
+				const existingUser = await User.findOne({ email });
 				if (existingUser) {
+
 					return done(null, false);
+
 				}
 
-				bcrypt.hash(password, saltRounds, async function(err, hash) {
-					if (err) return done(err, null);
+				bcrypt.hash(password, saltRounds, async (err, hash) => {
+
+					if (err) {
+
+						return done(err, null);
+
+					}
 					let speakEasyObj = speakEasyValueGenerator(email);
 					let newUser = {
-						email: email,
+						email,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
 						twofaSecret: speakEasyObj.value
 					};
-					const user = await new User(newUser).save();
-					return done(null, user);
+					return done(null, await new User(newUser).save());
+
 				});
+
 			} catch (err) {
+
 				return done(err, null);
+
 			}
+
 		}
 	)
 );
@@ -67,24 +88,42 @@ passport.use(
 	"local-login",
 	new LocalStrategy(
 		{
-			usernameField: "email",
+			passReqToCallback: true,
 			passwordField: "password",
-			passReqToCallback: true
+			usernameField: "email"
 		},
 		async (req, email, password, done) => {
+
 			try {
-				const existingUser = await User.findOne({ email: email });
+
+				const existingUser = await User.findOne({ email });
 				if (existingUser) {
-					bcrypt.compare(password, existingUser.password, function(err, res) {
-						if (err) return done(err, null);
-						if (!res) return done(null, false);
+
+					bcrypt.compare(password, existingUser.password, (err, res) => {
+
+						if (err) {
+
+							return done(err, null);
+
+						}
+						if (!res) {
+
+							return done(null, false);
+
+						}
 
 						return done(null, existingUser);
+
 					});
+
 				}
+
 			} catch (err) {
+
 				done(err, null);
+
 			}
+
 		}
 	)
 );
