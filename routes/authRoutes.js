@@ -1,6 +1,7 @@
 const qrGenerator = require("../services/2fa");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
+const requireCaptcha = require("../middleware/requireCaptcha");
 const { speakEasyVerifier } = require("../services/speakEasySecret");
 /* eslint-disable max-lines-per-function */
 module.exports = (app, passport) => {
@@ -17,7 +18,8 @@ module.exports = (app, passport) => {
 				/* eslint-enable */
 			};
 			const token = jwt.sign(currUser, keys.jwtKey, {
-				expiresIn: 48 * 60 * 60 //define time here.
+				// define time here.
+				expiresIn: 48 * 60 * 60
 			});
 			res.json({
 				token,
@@ -59,6 +61,7 @@ module.exports = (app, passport) => {
 	app.get(
 		"/get_twofaqr",
 		passport.authenticate("jwt", { session: false }),
+		requireCaptcha,
 		(req, res) => {
 
 			qrGenerator(
