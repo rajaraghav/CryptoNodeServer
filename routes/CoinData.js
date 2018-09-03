@@ -3,30 +3,40 @@ let allCoinsSyms = require("../config/allCoinsSyms");
 let baseURL = "https://min-api.cryptocompare.com/data/pricemultifull?";
 let fURL = "";
 let tURL = "";
-function getTSYMS(reqCurrencies) {
+function getTSYMS (reqCurrencies) {
+
 	return reqCurrencies.split("~");
+
 }
-function getFSYMS(reqCurrencies) {
+function getFSYMS (reqCurrencies) {
+
 	return reqCurrencies.split("~");
+
 }
-module.exports = app => {
+module.exports = (app) => {
+
 	app.get("/api/coindata", async (req, res) => {
+
 		let from = getFSYMS(req.query.from);
 		let to = getTSYMS(req.query.to);
 		console.log("from", from);
 		console.log("to", to);
-		(fURL = ""), (tURL = "");
+		fURL = "", tURL = "";
 		for (let froms of from) {
-			fURL += froms + ",";
+
+			fURL += `${froms},`;
+
 		}
 		console.log("FromData", fURL);
 		for (let tos of to) {
+
 			tURL += `${tos},`;
+
 		}
 		console.log("ToDAata", tURL);
 		tURL = tURL.substring(0, tURL.length - 1);
 		fURL = fURL.substring(0, fURL.length - 1);
-		let finalURL = baseURL + "fsyms=" + fURL + "&tsyms=" + tURL;
+		let finalURL = `${baseURL}fsyms=${fURL}&tsyms=${tURL}`;
 		console.log("FinalURL", finalURL);
 		let cryptoRes = await axios.get(finalURL);
 		let jsonCrypto = cryptoRes.data;
@@ -34,17 +44,25 @@ module.exports = app => {
 
 		let finRes = [];
 		for (let froms of from) {
+
 			let coinRawData = jsonCrypto.RAW[froms];
 			//console.log("coinRawData", coinRawData);
 			for (let key in coinRawData) {
+
 				let subData = coinRawData[key];
 				let data = {};
 				data.FROM = froms;
 				data.TO = key;
-				if (allCoinsSyms[froms] !== undefined)
+				if (allCoinsSyms[froms] !== undefined) {
+
 					data.FROMFULLNAME = allCoinsSyms[froms];
-				if (allCoinsSyms[key] !== undefined)
+
+				}
+				if (allCoinsSyms[key] !== undefined) {
+
 					data.TOFULLNAME = allCoinsSyms[key];
+
+				}
 				data.PRICE = subData.PRICE;
 				data.HIGH24HOUR = subData.HIGH24HOUR;
 				data.LOW24HOUR = subData.LOW24HOUR;
@@ -52,12 +70,18 @@ module.exports = app => {
 				data.VOLUME24HOUR = subData.TOTALVOLUME24HTO;
 				data.CHANGEPCT24HOUR = subData.CHANGEPCT24HOUR;
 				finRes.push(data);
+
 			}
+
 		}
 
 		res.send(finRes);
+
 	});
 	app.get("/api/getCoinName", async (req, res) => {
+
 		res.send(allCoinsSyms[req.query.sym]);
+
 	});
+
 };

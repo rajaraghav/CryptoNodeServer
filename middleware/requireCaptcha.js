@@ -3,9 +3,9 @@ var request = require("request");
 module.exports = (req, res, next) => {
 
 	if (
-		typeof req.body["g-recaptcha-response"] === "undefined" ||
-		req.body["g-recaptcha-response"] === "" ||
-		req.body["g-recaptcha-response"] === null
+		typeof req.body.captchaToken === "undefined" ||
+		req.body.captchaToken === "" ||
+		req.body.captchaToken === null
 	) {
 
 		return res.json({ responseError: "Please select captcha first" });
@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
 
 	const verificationURL = `https://www.google.com/
     recaptcha/api/siteverify?secret=${keys.captchaSecretKey}&response=${
-	req.body["g-recaptcha-response"]
+	req.body.captchaToken
 }&remoteip=${req.connection.remoteAddress}`;
 	request(verificationURL, (error, response, body) => {
 
