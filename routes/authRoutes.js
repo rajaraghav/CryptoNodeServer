@@ -8,6 +8,7 @@ module.exports = (app, passport) => {
 
 	app.post(
 		"/login",
+		requireCaptcha,
 		passport.authenticate("local-login", { session: false }),
 		(req, res) => {
 
@@ -30,6 +31,7 @@ module.exports = (app, passport) => {
 	);
 	app.post(
 		"/signup",
+		requireCaptcha,
 		passport.authenticate("local-signup", { session: false }),
 		(req, res) => {
 
