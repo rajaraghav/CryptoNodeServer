@@ -9,7 +9,7 @@ var request = require("request");
 		req.body.captchaToken === null
 	) {
 
-		return res.json({ responseError: "Please select captcha first" });
+		return res.status(404).json({ responseError: "Please select captcha first" });
 
 	}
 const sec = keys.captchaSecretKey;
