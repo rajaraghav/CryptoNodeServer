@@ -38,6 +38,7 @@
 		"qrcode": "^1.2.2",
 		"request": "^2.88.0",
 		"safe-buffer": "^5.1.2",
+		"sendgrid": "^5.2.3",
 		"socket.io": "^2.1.1",
 		"socket.io-client": "^2.1.1",
 		"socket.io-redis": "^5.2.0",

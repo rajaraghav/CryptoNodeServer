@@ -3,10 +3,12 @@ let { Schema } = mongoose;
 
 let UserSchema = new Schema({
 	email: String,
+	emailVerificationKey: String,
 	lastIP: String,
 	lastLogin: String,
 	otpAuthUrl: String,
 	password: String,
+	passwordChangeKey: String,
 	twofaSecret: String
 });
 // UserSchema.methods.generateHash = (password) => {

@@ -2,7 +2,10 @@ const qrGenerator = require("../services/2fa");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const requireCaptcha = require("../middleware/requireCaptcha");
+const request = require("request");
 const { speakEasyVerifier } = require("../services/speakEasySecret");
+const Mailer = require("../services/Mailer");
+const verifyTemplate = require("../services/emailTemplates/verifyTemplates");
 /* eslint-disable max-lines-per-function */
 module.exports = (app, passport) => {
 
@@ -31,10 +34,20 @@ module.exports = (app, passport) => {
 	);
 	app.post(
 		"/signup",
-		requireCaptcha,
+		//requireCaptcha,
 		passport.authenticate("local-signup", { session: false }),
 		(req, res) => {
 
+			console.log(req.user._id);
+			const userId = req.user._id.toString();
+			request.post({
+				form: {
+					emailVerificationKey: req.user.emailVerificationKey,
+					userEmail: req.user.email,
+					userId
+				},
+				url: "http://localhost:5000/verifyEmail"
+			});
 			res.json({ success: true });
 
 		}
@@ -56,6 +69,49 @@ module.exports = (app, passport) => {
 		} else {
 
 			res.status(403).send("failed");
+
+		}
+
+	});
+	app.get("/api/verifyemail/:userId/:hash", (req, res) => {
+
+		console.log(req.query);
+		res.send("Thanks for voting!");
+
+	});
+	app.get("/api/changePassword/:userId/:hash", (req, res) => {
+
+		console.log(req.query);
+		res.send("Thanks for voting!");
+
+	});
+	app.post("/api/sendgrid/webhooks", (req, res) => {
+
+		console.log("called by sendgrid", req.body);
+		res.send({});
+
+	});
+	app.post("/verifyEmail", async (req, res) => {
+
+		const verifier = {
+			body: "Please click the link below to compolete registration.",
+			dateSent: Date.now(),
+			recipients: [req.body.userEmail],
+			subject: "Action needed for your account at Binance",
+			title: "Verify email for Binance."
+		};
+		const mailer = new Mailer(
+			verifier,
+			verifyTemplate(req.body.userId, req.body.emailVerificationKey)
+		);
+		try {
+
+			await mailer.send();
+
+		} catch (err) {
+
+			console.log("error", err);
+			res.status(422).send(err);
 
 		}
 

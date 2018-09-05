@@ -14,13 +14,12 @@ class Mailer extends helper.Mail {
 		this.addContent(this.body);
 		this.addClickTracking();
 		this.addRecipients();
-		console.log(keys.sendGridKey);
 
 	}
 
 	formatAddresses (recipients) {
 
-		return recipients.map(({ email }) => new helper.Email(email));
+		return recipients.map((email) => new helper.Email(email));
 
 	}
 

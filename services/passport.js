@@ -3,6 +3,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
+const uuidv4 = require("uuid/v4");
 const ExtractJWT = passportJWT.ExtractJwt;
 const mongoose = require("mongoose");
 const { speakEasyValueGenerator } = require("./speakEasySecret");
@@ -51,9 +52,7 @@ passport.use(
 
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
-
-					return done(null, false);
-
+					//return done(null, false);
 				}
 
 				bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -64,10 +63,14 @@ passport.use(
 
 					}
 					let speakEasyObj = speakEasyValueGenerator(email);
+					const emailVerificationKey = uuidv4();
+					const passwordChangeKey = uuidv4();
 					let newUser = {
 						email,
+						emailVerificationKey,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
+						passwordChangeKey,
 						twofaSecret: speakEasyObj.value
 					};
 					return done(null, await new User(newUser).save());
