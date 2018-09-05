@@ -91,7 +91,6 @@ module.exports = (app, passport) => {
 
 		if (req.body !== undefined || req.body[0].url !== undefined) {
 
-			console.log("called by sendgrid", req.body[0].url);
 			const url = req.body[0].url;
 
 			const regPath = new Path("/api/verifyemail/:userId/:hash");
@@ -99,8 +98,12 @@ module.exports = (app, passport) => {
 			if (matchEmail) {
 
 				let verifiedUser = await User.findOne({ _id: matchEmail.userId });
-				verifiedUser.verified = true;
-				verifiedUser.save();
+				if (verifiedUser.emailVerificationKey === matchEmail.hash) {
+
+					verifiedUser.verified = true;
+					verifiedUser.save();
+
+				}
 
 			}
 			res.send({});
