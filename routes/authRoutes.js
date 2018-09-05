@@ -4,6 +4,7 @@ const qrGenerator = require("../services/2fa");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const requireCaptcha = require("../middleware/requireCaptcha");
+const requireEmailVerification = require("../middleware/requireEmailVerification");
 const request = require("request");
 const { speakEasyVerifier } = require("../services/speakEasySecret");
 const Mailer = require("../services/Mailer");
@@ -16,6 +17,7 @@ module.exports = (app, passport) => {
 	app.post(
 		"/login",
 		requireCaptcha,
+		requireEmailVerification,
 		passport.authenticate("local-login", { session: false }),
 		(req, res) => {
 
