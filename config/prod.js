@@ -9,5 +9,9 @@ module.exports = {
 	port: process.env.PORT,
 	redisHost: process.env.REDIS_HOST,
 	redisPort: process.env.REDIS_PORT,
+<<<<<<< HEAD
 	sendGridKey: process.env.SENDGRID_KEY
+=======
+	captchaSecretKey: process.env.CAPTCHA_SECRET_KEY,
+>>>>>>> f74db20616a49b78ae7f81dfd63f1157a09eaacf
 };
