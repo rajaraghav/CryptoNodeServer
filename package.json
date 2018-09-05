@@ -12,7 +12,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"devserver": "nodemon index.js",
-		"prodserver": "NODE_ENV=production node index.js",
+		"prodserver": "NODE_ENV=production pm2 start index.js",
 		"test": "jest"
 	},
 	"dependencies": {

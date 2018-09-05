@@ -1,3 +1,5 @@
+const Path = require("path-parser").default;
+const { URL } = require("url");
 const qrGenerator = require("../services/2fa");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
@@ -81,18 +83,17 @@ module.exports = (app, passport) => {
 	});
 	app.get("/api/changePassword/:userId/:hash", (req, res) => {
 
-		console.log(req.query);
-		res.send("Thanks for voting!");
+		res.send("Your email has been verified");
 
 	});
 	app.post("/api/sendgrid/webhooks", (req, res) => {
 
-		console.log("called by sendgrid", req.body);
+		console.log("called by sendgrid", req.body[0].url);
 		res.send({});
 
 	});
 	app.post("/verifyEmail", async (req, res) => {
-
+		
 		const verifier = {
 			body: "Please click the link below to compolete registration.",
 			dateSent: Date.now(),
@@ -110,7 +111,7 @@ module.exports = (app, passport) => {
 
 		} catch (err) {
 
-			console.log("error", err);
+			console.log("error", err.response.body);
 			res.status(422).send(err);
 
 		}
