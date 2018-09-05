@@ -5,7 +5,7 @@ const app = express();
 /* eslint-disable */
 const server = require("http").Server(app);
 /* eslint-enable */
-console.log(process.env.NODE_ENV)
+
 const mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());

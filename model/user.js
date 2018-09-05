@@ -9,7 +9,8 @@ let UserSchema = new Schema({
 	otpAuthUrl: String,
 	password: String,
 	passwordChangeKey: String,
-	twofaSecret: String
+	twofaSecret: String,
+	verified: Boolean
 });
 // UserSchema.methods.generateHash = (password) => {
 

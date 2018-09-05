@@ -52,7 +52,9 @@ passport.use(
 
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
-					//return done(null, false);
+
+					return done(null, false);
+
 				}
 
 				bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -71,7 +73,8 @@ passport.use(
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
 						passwordChangeKey,
-						twofaSecret: speakEasyObj.value
+						twofaSecret: speakEasyObj.value,
+						verified: false
 					};
 					return done(null, await new User(newUser).save());
 

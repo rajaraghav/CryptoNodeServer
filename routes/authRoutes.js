@@ -7,6 +7,8 @@ const requireCaptcha = require("../middleware/requireCaptcha");
 const request = require("request");
 const { speakEasyVerifier } = require("../services/speakEasySecret");
 const Mailer = require("../services/Mailer");
+const mongoose = require("mongoose");
+const User = mongoose.model("Users");
 const verifyTemplate = require("../services/emailTemplates/verifyTemplates");
 /* eslint-disable max-lines-per-function */
 module.exports = (app, passport) => {
@@ -86,14 +88,25 @@ module.exports = (app, passport) => {
 		res.send("Your email has been verified");
 
 	});
-	app.post("/api/sendgrid/webhooks", (req, res) => {
+	app.post("/api/sendgrid/webhooks", async (req, res) => {
 
 		console.log("called by sendgrid", req.body[0].url);
+		const url = req.body[0].url;
+
+		const regPath = new Path("/api/verifyemail/:userId/:hash");
+		const matchEmail = regPath.test(new URL(url).pathname);
+		if (matchEmail) {
+
+			let verifiedUser = await User.findOne({ _id: matchEmail.userId });
+			verifiedUser.verified = true;
+			verifiedUser.save();
+
+		}
 		res.send({});
 
 	});
 	app.post("/verifyEmail", async (req, res) => {
-		
+
 		const verifier = {
 			body: "Please click the link below to compolete registration.",
 			dateSent: Date.now(),
