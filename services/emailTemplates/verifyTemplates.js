@@ -1,4 +1,4 @@
-const keys = require("../../Config/keys");
+const keys = require("../../config/keys");
 module.exports = (userId, emailVerificationKey) => `<html>
             <body> 
             <div style="margin-left: 20px;">
