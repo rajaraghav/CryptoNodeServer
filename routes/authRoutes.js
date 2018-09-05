@@ -38,11 +38,10 @@ module.exports = (app, passport) => {
 	);
 	app.post(
 		"/signup",
-		//requireCaptcha,
+		requireCaptcha,
 		passport.authenticate("local-signup", { session: false }),
 		(req, res) => {
 
-			console.log(req.user._id);
 			const userId = req.user._id.toString();
 			request.post({
 				form: {
@@ -80,29 +79,33 @@ module.exports = (app, passport) => {
 	app.get("/api/verifyemail/:userId/:hash", (req, res) => {
 
 		console.log(req.query);
-		res.send("Thanks for voting!");
+		res.send("Your email has been verified.");
 
 	});
 	app.get("/api/changePassword/:userId/:hash", (req, res) => {
 
-		res.send("Your email has been verified");
+		res.send("Your password has been changed.");
 
 	});
 	app.post("/api/sendgrid/webhooks", async (req, res) => {
 
-		console.log("called by sendgrid", req.body[0].url);
-		const url = req.body[0].url;
+		if (req.body !== undefined || req.body[0].url !== undefined) {
 
-		const regPath = new Path("/api/verifyemail/:userId/:hash");
-		const matchEmail = regPath.test(new URL(url).pathname);
-		if (matchEmail) {
+			console.log("called by sendgrid", req.body[0].url);
+			const url = req.body[0].url;
 
-			let verifiedUser = await User.findOne({ _id: matchEmail.userId });
-			verifiedUser.verified = true;
-			verifiedUser.save();
+			const regPath = new Path("/api/verifyemail/:userId/:hash");
+			const matchEmail = regPath.test(new URL(url).pathname);
+			if (matchEmail) {
+
+				let verifiedUser = await User.findOne({ _id: matchEmail.userId });
+				verifiedUser.verified = true;
+				verifiedUser.save();
+
+			}
+			res.send({});
 
 		}
-		res.send({});
 
 	});
 	app.post("/verifyEmail", async (req, res) => {
