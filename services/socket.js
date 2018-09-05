@@ -33,8 +33,8 @@ const io = (socketIo, redisAdapter) => {
 		let unpackedData = CCC.CURRENT.unpack(data);
 		let textType = CCC.STATIC.TYPE_INVERTED[unpackedData.TYPE];
 		unpackedData.TYPE = textType;
-		console.log("sckt", unpackedData);
-		// socketIo.emit(textType, unpackedData);
+		//console.log("sckt", unpackedData);
+		socketIo.emit(textType, unpackedData);
 
 	});
 
