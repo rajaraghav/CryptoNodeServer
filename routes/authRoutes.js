@@ -17,7 +17,7 @@ module.exports = (app, passport) => {
 	app.post(
 		"/login",
 		requireCaptcha,
-		requireEmailVerification,
+
 		passport.authenticate("local-login", { session: false }),
 		(req, res) => {
 

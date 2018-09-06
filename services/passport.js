@@ -105,6 +105,11 @@ passport.use(
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
 
+					if (!existingUser.verified) {
+
+						return done(null, false);
+
+					}
 					bcrypt.compare(password, existingUser.password, (err, res) => {
 
 						if (err) {
