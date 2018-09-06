@@ -10,6 +10,7 @@ const Mailer = require("../services/Mailer");
 const mongoose = require("mongoose");
 const User = mongoose.model("Users");
 const verifyTemplate = require("../services/emailTemplates/verifyTemplates");
+const passwordTemplate = require("../services/emailTemplates/passwordTemplates");
 /* eslint-disable max-lines-per-function */
 module.exports = (app, passport) => {
 
@@ -43,14 +44,22 @@ module.exports = (app, passport) => {
 		(req, res) => {
 
 			const userId = req.user._id.toString();
-			request.post({
-				form: {
-					emailVerificationKey: req.user.emailVerificationKey,
-					userEmail: req.user.email,
-					userId
-				},
-				url: "http://localhost:5000/verifyEmail"
-			});
+			try {
+
+				request.post({
+					form: {
+						emailVerificationKey: req.user.emailVerificationKey,
+						userEmail: req.user.email,
+						userId
+					},
+					url: "http://localhost:5000/verifyEmail"
+				});
+
+			} catch (ex) {
+
+				console.log("req exception in signup");
+
+			}
 			res.json({ success: true });
 
 		}
@@ -78,7 +87,6 @@ module.exports = (app, passport) => {
 	});
 	app.get("/api/verifyemail/:userId/:hash", (req, res) => {
 
-		console.log(req.query);
 		res.send("Your email has been verified.");
 
 	});
@@ -87,14 +95,17 @@ module.exports = (app, passport) => {
 		res.send("Your password has been changed.");
 
 	});
+	/* eslint-disable max-statements,max-len*/
 	app.post("/api/sendgrid/webhooks", async (req, res) => {
 
 		if (req.body !== undefined || req.body[0].url !== undefined) {
 
 			const url = req.body[0].url;
 
-			const regPath = new Path("/api/verifyemail/:userId/:hash");
-			const matchEmail = regPath.test(new URL(url).pathname);
+			const regEmailPath = new Path("/api/verifyemail/:userId/:hash");
+			const regPasswordPath = new Path("/api/changepassword/:userId/:hash");
+			const matchEmail = regEmailPath.test(new URL(url).pathname);
+			const matchPassword = regPasswordPath.test(new URL(url).pathname);
 			if (matchEmail) {
 
 				let verifiedUser = await User.findOne({ _id: matchEmail.userId });
@@ -105,24 +116,66 @@ module.exports = (app, passport) => {
 
 				}
 
+			} else if (matchPassword) {
+
+				let currUser = await User.findOne({ _id: matchPassword.userId });
+				if (currUser.emailPasswordKey === matchPassword.hash) {
+
+					console.log("change passsword working");
+
+				}
+
 			}
 			res.send({});
 
 		}
 
 	});
+	/* eslint-enable max-statements */
 	app.post("/verifyEmail", async (req, res) => {
 
 		const verifier = {
-			body: "Please click the link below to compolete registration.",
+			body: "Please click the link below to complete registration.",
 			dateSent: Date.now(),
 			recipients: [req.body.userEmail],
 			subject: "Action needed for your account at Binance",
 			title: "Verify email for Binance."
 		};
+
 		const mailer = new Mailer(
 			verifier,
 			verifyTemplate(req.body.userId, req.body.emailVerificationKey)
+		);
+		try {
+
+			await mailer.send();
+
+		} catch (err) {
+
+			console.log("error", err.response.body);
+			res.status(422).send(err);
+
+		}
+
+	});
+	app.post("/changepassword", async (req, res) => {
+
+		const changer = {
+			body: "Please click the link below to change your password.",
+			dateSent: Date.now(),
+			recipients: [req.body.userEmail],
+			subject: "Action needed for your account at Binance",
+			title: "Password change request for your account on Binance."
+		};
+		const userId = await User.findOne({ email: req.body.userEmail });
+		if (userId === undefined || userId === null) {
+
+			return res.status(404).send({ message: "user does not exist" });
+
+		}
+		const mailer = new Mailer(
+			changer,
+			passwordTemplate(userId, req.body.passwordChangeKey)
 		);
 		try {
 
