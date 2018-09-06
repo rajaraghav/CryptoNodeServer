@@ -103,6 +103,7 @@ passport.use(
 			try {
 
 				const existingUser = await User.findOne({ email });
+				console.log(existingUser);
 				if (existingUser) {
 
 					if (!existingUser.verified) {
@@ -128,6 +129,7 @@ passport.use(
 					});
 
 				}
+				return done(null, false);
 
 			} catch (err) {
 
