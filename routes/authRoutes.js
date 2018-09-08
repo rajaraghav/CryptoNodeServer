@@ -2,6 +2,8 @@ const Path = require("path-parser").default;
 const { URL } = require("url");
 const qrGenerator = require("../services/2fa");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const keys = require("../config/keys");
 const requireCaptcha = require("../middleware/requireCaptcha");
 const request = require("request");
@@ -91,12 +93,36 @@ module.exports = (app, passport) => {
 		res.send("Your email has been verified.");
 
 	});
-	app.get("/api/changePassword/:token", (req, res) => {
+
+	app.post("/api/changePassword/:token", async (req, res) => {
+
+		console.log(req.body.password);
 
 		try {
 
 			let decoded = jwt.verify(req.params.token, keys.jwtKey);
 			console.log(decoded);
+			let currUser = await User.findById(decoded.currUser);
+			if (typeof currUser === "undefined" || currUser === null) {
+
+				res.
+					status(403).
+					send({ responseError: "No such user or illegal token." });
+
+			}
+			bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+
+				if (err) {
+
+					res.status(500).send({ responseError: `server error ${err}` });
+
+				}
+				currUser.password = hash;
+				await currUser.save();
+				console.log(currUser);
+				res.send(200);
+
+			});
 
 		} catch (ex) {
 
@@ -108,9 +134,12 @@ module.exports = (app, passport) => {
 	/* eslint-disable max-statements,max-len*/
 	app.post("/api/sendgrid/webhooks", async (req, res) => {
 
-		if (req.body !== undefined || req.body[0].url !== undefined) {
+		if (
+			typeof req.body !== "undefined" ||
+			typeof req.body[0].url !== "undefined"
+		) {
 
-			const url = req.body[0].url;
+			const [{ url }] = req.body;
 
 			const regEmailPath = new Path("/api/verifyemail/:userId/:hash");
 			//const regPasswordPath = new Path("/api/changepassword/:hash");
@@ -171,7 +200,7 @@ module.exports = (app, passport) => {
 			title: "Password change request for your account on Binance."
 		};
 		const currUser = await User.findOne({ email: req.body.userEmail });
-		if (currUser === undefined || currUser === null) {
+		if (typeof currUser === "undefined" || currUser === null) {
 
 			return res.status(404).send({ responseError: "user does not exist" });
 

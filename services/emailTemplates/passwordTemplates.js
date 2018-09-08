@@ -8,7 +8,7 @@ module.exports = (passwordResetToken) => `<html>
                 your password and use services on Binance.</p>
                 <div style="text-align: center;">
                     <a href="${
-	keys.redirectClickUrl
+	keys.passwordResetRedirect
 }/api/changepassword/${passwordResetToken}">Verify my account.</a>    
                     </div>   
                     <h2>Didn’t request this email?</h2>

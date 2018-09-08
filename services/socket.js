@@ -28,6 +28,11 @@ const io = (socketIo, redisAdapter) => {
     	"TRADECATCHUPCOMPLETE",
     	"NEWSCATCHUPCOMPLETE"
 	*/
+	socketIo.on("connection", (socket) => {
+
+		console.log("connected to", socket);
+
+	});
 	socketClient.on("m", (data) => {
 
 		let unpackedData = CCC.CURRENT.unpack(data);
