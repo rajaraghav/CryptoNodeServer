@@ -52,12 +52,13 @@ module.exports = (app, passport) => {
 						userEmail: req.user.email,
 						userId
 					},
-					url: "http://localhost:5000/verifyEmail"
+					url: `${keys.redirectClickUrl}/verifyEmail`
 				});
 
 			} catch (ex) {
 
 				console.log("req exception in signup");
+				res.json({ responseError: ex });
 
 			}
 			res.json({ success: true });
@@ -90,9 +91,18 @@ module.exports = (app, passport) => {
 		res.send("Your email has been verified.");
 
 	});
-	app.get("/api/changePassword/:userId/:hash", (req, res) => {
+	app.get("/api/changePassword/:token", (req, res) => {
 
-		res.send("Your password has been changed.");
+		try {
+
+			let decoded = jwt.verify(req.params.token, keys.jwtKey);
+			console.log(decoded);
+
+		} catch (ex) {
+
+			res.status(403).send({ responseError: "wrong jwt token." });
+
+		}
 
 	});
 	/* eslint-disable max-statements,max-len*/
@@ -103,9 +113,9 @@ module.exports = (app, passport) => {
 			const url = req.body[0].url;
 
 			const regEmailPath = new Path("/api/verifyemail/:userId/:hash");
-			const regPasswordPath = new Path("/api/changepassword/:userId/:hash");
+			//const regPasswordPath = new Path("/api/changepassword/:hash");
 			const matchEmail = regEmailPath.test(new URL(url).pathname);
-			const matchPassword = regPasswordPath.test(new URL(url).pathname);
+			//const matchPassword = regPasswordPath.test(new URL(url).pathname);
 			if (matchEmail) {
 
 				let verifiedUser = await User.findOne({ _id: matchEmail.userId });
@@ -116,19 +126,11 @@ module.exports = (app, passport) => {
 
 				}
 
-			} else if (matchPassword) {
-
-				let currUser = await User.findOne({ _id: matchPassword.userId });
-				if (currUser.emailPasswordKey === matchPassword.hash) {
-
-					console.log("change passsword working");
-
-				}
-
 			}
 			res.send({});
 
 		}
+		res.send({});
 
 	});
 	/* eslint-enable max-statements */
@@ -158,6 +160,7 @@ module.exports = (app, passport) => {
 		}
 
 	});
+	/* eslint-disable max-statements*/
 	app.post("/changepassword", async (req, res) => {
 
 		const changer = {
@@ -167,19 +170,21 @@ module.exports = (app, passport) => {
 			subject: "Action needed for your account at Binance",
 			title: "Password change request for your account on Binance."
 		};
-		const userId = await User.findOne({ email: req.body.userEmail });
-		if (userId === undefined || userId === null) {
+		const currUser = await User.findOne({ email: req.body.userEmail });
+		if (currUser === undefined || currUser === null) {
 
-			return res.status(404).send({ message: "user does not exist" });
+			return res.status(404).send({ responseError: "user does not exist" });
 
 		}
-		const mailer = new Mailer(
-			changer,
-			passwordTemplate(userId, req.body.passwordChangeKey)
-		);
+		const token = jwt.sign({ currUser: currUser._id.toString() }, keys.jwtKey, {
+			// define time here.
+			expiresIn: 48 * 60 * 60
+		});
+		const mailer = new Mailer(changer, passwordTemplate(token));
 		try {
 
 			await mailer.send();
+			res.status(200).send({ response: "reset password mail sent." });
 
 		} catch (err) {
 

@@ -1,5 +1,5 @@
 const keys = require("../../config/keys");
-module.exports = (userId, passwordResetKey) => `<html>
+module.exports = (passwordResetToken) => `<html>
             <body> 
             <div style="margin-left: 20px;">
                 <h2>Password change request from Binance.</h2>
@@ -9,7 +9,7 @@ module.exports = (userId, passwordResetKey) => `<html>
                 <div style="text-align: center;">
                     <a href="${
 	keys.redirectClickUrl
-}/api/changepassword/${userId}/${passwordResetKey}">Verify my account.</a>    
+}/api/changepassword/${passwordResetToken}">Verify my account.</a>    
                     </div>   
                     <h2>Didn’t request this email?</h2>
                     <p>Oh oh! Your account might be compromised.
