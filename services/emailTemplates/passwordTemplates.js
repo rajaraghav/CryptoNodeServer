@@ -9,7 +9,7 @@ module.exports = (passwordResetToken) => `<html>
                 <div style="text-align: center;">
                     <a href="${
 	keys.passwordResetRedirect
-}/api/changepassword/${passwordResetToken}">Verify my account.</a>    
+}/api/changepassword/${passwordResetToken}">Click here.</a>    
                     </div>   
                     <h2>Didn’t request this email?</h2>
                     <p>Oh oh! Your account might be compromised.
