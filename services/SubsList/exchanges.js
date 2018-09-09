@@ -157,4 +157,10 @@ module.exports = [
 	// "Zecoex"
 ];
 //define your exchanges here
-module.exports.default = ["Binance"];
+module.exports.default = [
+	"Binance",
+	"Coinbase",
+	"OKCoin",
+	"Kraken",
+	"CoinDeal"
+];
