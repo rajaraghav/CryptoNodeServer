@@ -19,25 +19,28 @@ module.exports = (req, res, next) => {
 	try {
 
 		const verificationURL = "https://www.google.com/recaptcha/api/siteverify";
-		console.log(verificationURL);
-
 		request.post(
-			{ url: verificationURL,
-				form: { secret: sec,
-					response: tok } },
+			{
+				url: verificationURL,
+				form: {
+					secret: sec,
+					response: tok
+				}
+			},
 			(error, response, body) => {
 
 				if (error) {
 
-					return res.json({ responseError: "google server error" });
+					return res.status(500).json({ responseError: "google server error" });
 
 				}
 
-				console.log("bdy", body);
 				let resBody = JSON.parse(body);
 				if (typeof resBody.success !== "undefined" && !resBody.success) {
 
-					return res.json({ responseError: "Failed captcha verification" });
+					return res.
+						status(403).
+						json({ responseError: "Failed captcha verification" });
 
 				}
 				next();
@@ -47,7 +50,7 @@ module.exports = (req, res, next) => {
 
 	} catch (err) {
 
-		console.log(err);
+		res.status(500).send(err);
 
 	}
 

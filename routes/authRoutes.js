@@ -32,7 +32,7 @@ module.exports = (app, passport) => {
 				// define time here.
 				expiresIn: 48 * 60 * 60
 			});
-			res.json({
+			res.status(200).json({
 				token,
 				user: currUser
 			});
@@ -59,11 +59,11 @@ module.exports = (app, passport) => {
 
 			} catch (ex) {
 
-				console.log("req exception in signup");
-				res.json({ responseError: ex });
+				console.log("request exception in signup");
+				res.status(500).json({ responseError: ex });
 
 			}
-			res.json({ success: true });
+			res.status(200).json({ response: "signup successful." });
 
 		}
 	);
@@ -90,7 +90,7 @@ module.exports = (app, passport) => {
 	});
 	app.get("/api/verifyemail/:userId/:hash", (req, res) => {
 
-		res.send("Your email has been verified.");
+		res.status(200).send("Your email has been verified.");
 
 	});
 
@@ -120,7 +120,7 @@ module.exports = (app, passport) => {
 				currUser.password = hash;
 				await currUser.save();
 				console.log(currUser);
-				res.send(200);
+				res.status(200);
 
 			});
 
@@ -236,10 +236,10 @@ module.exports = (app, passport) => {
 
 					if (err) {
 
-						res.sendStatus(500).send("error");
+						res.status(500).send("error");
 
 					}
-					res.send({
+					res.status(200).send({
 						imgsrc,
 						otpAuthSecretKey
 					});
