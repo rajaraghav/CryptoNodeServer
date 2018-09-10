@@ -66,13 +66,11 @@ passport.use(
 					}
 					let speakEasyObj = speakEasyValueGenerator(email);
 					const emailVerificationKey = uuidv4();
-					const passwordChangeKey = uuidv4();
 					let newUser = {
 						email,
 						emailVerificationKey,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
-						passwordChangeKey,
 						twofaSecret: speakEasyObj.value,
 						verified: false
 					};
@@ -128,8 +126,11 @@ passport.use(
 
 					});
 
+				} else {
+
+					return done(null, false);
+
 				}
-				return done(null, false);
 
 			} catch (err) {
 

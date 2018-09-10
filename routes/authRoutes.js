@@ -140,23 +140,32 @@ module.exports = (app, passport) => {
 		) {
 
 			const [{ url }] = req.body;
+			let regEmailPath;
+			try {
 
-			const regEmailPath = new Path("/api/verifyemail/:userId/:hash");
-			//const regPasswordPath = new Path("/api/changepassword/:hash");
-			const matchEmail = regEmailPath.test(new URL(url).pathname);
-			//const matchPassword = regPasswordPath.test(new URL(url).pathname);
-			if (matchEmail) {
+				regEmailPath = new Path("/api/verifyemail/:userId/:hash");
+				const matchEmail = regEmailPath.test(new URL(url).pathname);
+				//const matchPassword = regPasswordPath.test(new URL(url).pathname);
+				if (matchEmail) {
 
-				let verifiedUser = await User.findOne({ _id: matchEmail.userId });
-				if (verifiedUser.emailVerificationKey === matchEmail.hash) {
+					let verifiedUser = await User.findOne({ _id: matchEmail.userId });
+					if (verifiedUser.emailVerificationKey === matchEmail.hash) {
 
-					verifiedUser.verified = true;
-					verifiedUser.save();
+						verifiedUser.verified = true;
+						verifiedUser.save();
+
+					}
 
 				}
+				res.send({});
+
+			} catch (ex) {
+
+				console.log("error in sengrid post path", ex, url);
+				res.send({});
 
 			}
-			res.send({});
+			//const regPasswordPath = new Path("/api/changepassword/:hash");
 
 		}
 		res.send({});

@@ -8,7 +8,6 @@ let UserSchema = new Schema({
 	lastLogin: String,
 	otpAuthUrl: String,
 	password: String,
-	passwordChangeKey: String,
 	twofaSecret: String,
 	verified: Boolean
 });
