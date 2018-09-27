@@ -56,7 +56,6 @@ passport.use(
 					return done(null, false);
 
 				}
-
 				bcrypt.hash(password, saltRounds, async (err, hash) => {
 
 					if (err) {
