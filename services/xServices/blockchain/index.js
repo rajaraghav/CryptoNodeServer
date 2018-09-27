@@ -1,9 +1,7 @@
-import { init, getAddress, updateBalance } from './wallet'
-import syncRunner from './sync-runner'
+import { getAddress, init, updateBalance } from "./wallet";
+import syncRunner from "./sync-runner";
 
-export default {
-  init,
-  getAddress,
-  updateBalance,
-  syncRunner,
-}
+module.exports.init = init;
+module.exports.getAddress = getAddress;
+module.exports.updateBalance = updateBalance;
+module.exports.syncRunner = syncRunner;

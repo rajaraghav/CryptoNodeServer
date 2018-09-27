@@ -4,7 +4,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 const app = express();
-import blockchain from "./services/xServices/blockchain";
+const blockchain = require("./services/xServices/blockchain");
 
 /* eslint-disable */
 const server = require("http").Server(app);
@@ -60,8 +60,7 @@ app.get("/", (req, res) => {
 });
 require("./routes/CoinData")(app);
 require("./routes/authRoutes")(app, passport);
-const xApi = require("./routes/xApi");
-app.use("/api", xApi);
+require("./routes/xApi");
 /* eslint-disable */
 const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */

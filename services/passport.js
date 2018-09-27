@@ -36,6 +36,33 @@ passport.use(new JWTStrategy(
 
 	}
 ));
+export const token = ({ required, roles = User.roles } = {}) => (
+	req,
+	res,
+	next
+) => passport.authenticate("token", { session: false }, (err, user, info) => {
+
+	if (
+		err ||
+			required && !user ||
+			required && !~roles.indexOf(user.role)
+	) {
+
+		return res.status(401).end();
+
+	}
+	req.logIn(user, { session: false }, (err) => {
+
+		if (err) {
+
+			return res.status(401).end();
+
+		}
+		next();
+
+	});
+
+})(req, res, next);
 passport.use(
 	"local-signup",
 	new LocalStrategy(

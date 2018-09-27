@@ -1,37 +1,41 @@
-import { runMethod, XError } from '../../services/Xchange'
+import { runMethod, XError } from "../../../services/xServices/Xchange";
 
 const fetchAuthUID = (user, role) => {
-  if (role !== 'user') {
-    return {}
-  }
+	if (role !== "user") {
+		return {};
+	}
 
-  if (!user) {
-    throw new XError(403, `Not logged in`)
-  }
+	if (!user) {
+		throw new XError(403, `Not logged in`);
+	}
 
-  const uid = user.xid
+	const uid = user.xid;
 
-  if (!uid) {
-    throw new XError(404, `No xid at user ${user.id}`)
-  }
+	if (!uid) {
+		throw new XError(404, `No xid at user ${user.id}`);
+	}
 
-  return uid
-}
+	return uid;
+};
 
-export const sendRequest = (role) => async (req, res, next) => {
-  // eslint-disable-next-line camelcase
-  const { user, params: { method }, query: { access_token, ...payload } } = req
-  
-  try {
-    const uid = fetchAuthUID(user, role)
-    const opts = uid ? { uid } : {}
+export const sendRequest = role => async (req, res, next) => {
+	// eslint-disable-next-line camelcase
+	const {
+		user,
+		params: { method },
+		query: { access_token, ...payload }
+	} = req;
 
-    const reply = await runMethod(method, payload, role, opts)
+	try {
+		const uid = fetchAuthUID(user, role);
+		const opts = uid ? { uid } : {};
 
-    res.json(reply)
-  } catch ({ status, code, name, message }) {
-    const reply = { error: true, result: { code, name, message } }
+		const reply = await runMethod(method, payload, role, opts);
 
-    res.status(status || 500).json(reply)
-  }
-}
+		res.json(reply);
+	} catch ({ status, code, name, message }) {
+		const reply = { error: true, result: { code, name, message } };
+
+		res.status(status || 500).json(reply);
+	}
+};

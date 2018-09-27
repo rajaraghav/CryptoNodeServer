@@ -1,8 +1,6 @@
 import { Router } from "express";
-import auth from "./auth";
 import deposit from "./deposit";
 import trade from "./trade";
-import user from "./user";
 
 const router = new Router();
 //@apiDefine admin Admin access only
@@ -19,8 +17,7 @@ const router = new Router();
  * @apiDefine master Master access only
  * You must pass `access_token` parameter or a Bearer Token authorization header
  * to access this endpoint. */
-router.use("/users", user);
-router.use("/auth", auth);
+
 router.use("/trade", trade);
 router.use("/deposit", deposit);
 
