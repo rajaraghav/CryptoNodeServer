@@ -10,6 +10,11 @@
 		"setupTestFrameworkScriptFile": "./tests/setup.js"
 	},
 	"scripts": {
+		"connect-xchange": "ssh raja@localhost -L 5005:192.168.18.45:8080 -N -f",
+		"predevserver": "npm run connect-xchange",
+		"preprodserver": "npm run connect-xchange",
+		"pretest": "npm run connect-xchange",
+		"prestart": "npm run connect-xchange",
 		"start": "node index.js",
 		"devserver": "nodemon index.js",
 		"prodserver": "NODE_ENV=production pm2 start index.js",

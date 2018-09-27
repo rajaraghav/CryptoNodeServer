@@ -1,13 +1,15 @@
 let keys = require("./config/keys");
 const express = require("express");
 const passport = require("passport");
+const mongoose = require("mongoose");
+var bodyParser = require("body-parser");
 const app = express();
+import blockchain from "./services/xServices/blockchain";
+
 /* eslint-disable */
 const server = require("http").Server(app);
 /* eslint-enable */
 
-const mongoose = require("mongoose");
-var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -58,27 +60,22 @@ app.get("/", (req, res) => {
 });
 require("./routes/CoinData")(app);
 require("./routes/authRoutes")(app, passport);
+const xApi = require("./routes/xApi");
+app.use("/api", xApi);
 /* eslint-disable */
 const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */
 
 const port = PORT_NUM;
 /* eslint-disable no-undef*/
-if (process.env.NODE_ENV === "production") {
+setImmediate(() => {
 
+	blockchain.init();
+	blockchain.syncRunner();
 	server.listen(port, () => {
 
-		/* eslint-enable */
-		console.log("node server running.");
+		console.log("node server running at ", port);
 
 	});
 
-} else {
-
-	server.listen(port, () => {
-
-		console.log("node server running.");
-
-	});
-
-}
+});
