@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 });
 require("./routes/CoinData")(app);
 require("./routes/authRoutes")(app, passport);
-require("./routes/xApi");
+require("./routes/xApi/index")(app);
 /* eslint-disable */
 const PORT_NUM = process.env.PORT || 5000;
 /* eslint-enable */

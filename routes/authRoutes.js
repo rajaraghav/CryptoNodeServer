@@ -18,14 +18,15 @@ module.exports = (app, passport) => {
 
 	app.post(
 		"/login",
-		requireCaptcha,
+	//	requireCaptcha,
 		passport.authenticate("local-login", { session: false }),
 		(req, res) => {
 
 			let currUser = {
 				email: req.user.email,
 				/* eslint-disable */
-				id: req.user._id
+				id: req.user._id,
+				xid: req.user.xid
 				/* eslint-enable */
 			};
 			const token = jwt.sign(currUser, keys.jwtKey, {
@@ -41,7 +42,7 @@ module.exports = (app, passport) => {
 	);
 	app.post(
 		"/signup",
-		requireCaptcha,
+		//requireCaptcha,
 		passport.authenticate("local-signup", { session: false }),
 		(req, res) => {
 
@@ -54,6 +55,8 @@ module.exports = (app, passport) => {
 						userEmail: req.user.email,
 						userId
 					},
+					
+					headers:{"Connection": "keep-alive"},
 					url: `${keys.redirectClickUrl}/verifyEmail`
 				});
 
@@ -87,10 +90,10 @@ module.exports = (app, passport) => {
 
 		}
 
-	});
+	})
 	app.get("/api/verifyemail/:userId/:hash", (req, res) => {
 
-		res.status(200).send("Your email has been verified.");
+		res.status(200).send("Your email has been verified.").end();
 
 	});
 
@@ -120,7 +123,7 @@ module.exports = (app, passport) => {
 				currUser.password = hash;
 				await currUser.save();
 				console.log(currUser);
-				res.status(200);
+				res.status(200).end();
 
 			});
 
@@ -157,18 +160,18 @@ module.exports = (app, passport) => {
 					}
 
 				}
-				res.send({});
+				res.send({}).end();
 
 			} catch (ex) {
 
 				console.log("error in sengrid post path", ex, url);
-				res.send({});
+				res.send({}).end();
 
 			}
 			//const regPasswordPath = new Path("/api/changepassword/:hash");
 
 		}
-		res.send({});
+		res.send({}).end();
 
 	});
 	/* eslint-enable max-statements */
@@ -189,7 +192,7 @@ module.exports = (app, passport) => {
 		try {
 
 			await mailer.send();
-
+			res.status(200).send("done");
 		} catch (err) {
 
 			console.log("error", err.response.body);

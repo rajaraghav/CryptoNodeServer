@@ -4,7 +4,7 @@ const fetchAuthUID = (user, role) => {
 	if (role !== "user") {
 		return {};
 	}
-
+	console.log(user)
 	if (!user) {
 		throw new XError(403, `Not logged in`);
 	}
@@ -25,7 +25,7 @@ export const sendRequest = role => async (req, res, next) => {
 		params: { method },
 		query: { access_token, ...payload }
 	} = req;
-
+	console.log(user);
 	try {
 		const uid = fetchAuthUID(user, role);
 		const opts = uid ? { uid } : {};

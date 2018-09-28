@@ -20,8 +20,8 @@ passport.use(new JWTStrategy(
 		try {
 
 			const user = await User.findOne({ _id: jwtPayload.id });
-			if (user) {
 
+			if (user) {
 				return done(null, user);
 
 			}
@@ -36,11 +36,11 @@ passport.use(new JWTStrategy(
 
 	}
 ));
-export const token = ({ required, roles = User.roles } = {}) => (
+export const token = ({ required, roles = ['user', 'admin'] } = {}) => (
 	req,
 	res,
 	next
-) => passport.authenticate("token", { session: false }, (err, user, info) => {
+) => passport.authenticate("jwt", { session: false }, (err, user, info) => {
 
 	if (
 		err ||
@@ -74,9 +74,20 @@ passport.use(
 		/* eslint-disable max-params */
 
 		async (req, email, password, done) => {
-
+				
 			try {
-
+				try{
+					if(typeof req.body==="undefined"||typeof req.body.email==="undefined"||typeof req.body.password==="undefined"||typeof req.body.role==="undefined")
+					return done(null,null);
+					
+					if(req.body.role!=="admin"&&req.body.role!=="user")
+					return done(null,null);
+					
+				}
+				catch(ex)
+				{					
+					return done(null,null)
+				}
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
 
@@ -95,6 +106,7 @@ passport.use(
 					let newUser = {
 						email,
 						emailVerificationKey,
+						role:req.body.role,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
 						twofaSecret: speakEasyObj.value,
