@@ -139,10 +139,10 @@ passport.use(
 			try {
 
 				const existingUser = await User.findOne({ email });
-				console.log(existingUser);
+				
 				if (existingUser) {
-
-					if (!existingUser.verified) {
+					console.log(process.env.NODE_ENV)
+					if (process.env.NODE_ENV==='production'&&!existingUser.verified) {
 
 						return done(null, false);
 
