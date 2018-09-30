@@ -88,7 +88,7 @@ export default [
   },
   {
     name: "market.user_deals",
-    role: "public",
+    role: "user",
     tokens: ["uid", "market", "offset", "limit"],
     handle: {
       uid: check.Number,
@@ -176,7 +176,7 @@ export default [
   {
     name: "market.deals",
     role: "public",
-    tokens: ["market","limit","last_id"],
+    tokens: ["market", "limit", "last_id"],
     handle: {
       limit: check.Number,
       last_id: check.Number
@@ -195,7 +195,7 @@ export default [
   {
     name: "market.status",
     role: "public",
-    tokens: ["market"]
+    tokens: ["market", "period"]
   },
   {
     name: "market.kline",
