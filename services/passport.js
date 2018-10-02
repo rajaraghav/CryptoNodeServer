@@ -80,7 +80,7 @@ passport.use(
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
 
-					return done(null, false);
+					return done(null, "user already exists");
 
 				}
 				bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -106,7 +106,7 @@ passport.use(
 
 			} catch (err) {
 
-				return done(err, null);
+				return done(null, err);
 
 			}
 
@@ -132,19 +132,19 @@ passport.use(
 
 					if (!existingUser.verified) {
 
-						return done(null, false);
+						return done(null, "user is not verified");
 
 					}
 					bcrypt.compare(password, existingUser.password, (err, res) => {
 
 						if (err) {
 
-							return done(err, null);
+							return done(null, err);
 
 						}
 						if (!res) {
 
-							return done(null, false);
+							return done(null, "password does not match");
 
 						}
 
@@ -154,13 +154,13 @@ passport.use(
 
 				} else {
 
-					return done(null, false);
+					return done(null, "user does not exist");
 
 				}
 
 			} catch (err) {
 
-				done(err, null);
+				return done(null, err);
 
 			}
 

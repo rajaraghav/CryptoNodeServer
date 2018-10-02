@@ -8,5 +8,5 @@ tempArr = cccaggBTCsubs.concat(cccaggETHsubs);
 tempArr = tempArr.concat(currentCoinsubs);
 tempArr = tempArr.concat(tradeCoinsubs);
 tempArr = tempArr.concat(cccaggBNBsubs);
-console.log(tempArr);
+//console.log(tempArr);
 module.exports = tempArr;
