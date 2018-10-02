@@ -15,11 +15,11 @@
 		]
 	},
 	"scripts": {
-		"connect-xchange": "ssh raja@localhost -L 5005:192.168.18.45:8080 -N -f",
-		"predevsserver": "npm run connect-xchange",
-		"preproddserver": "npm run connect-xchange",
+		"connect-xchange": "ssh dev1644@localhost -L 5005:192.168.18.45:8080 -N -f",
+		"predevserver": "npm run connect-xchange",
+		"preprodserver": "npm run connect-xchange",
 		"pretest": "npm run connect-xchange",
-		"presstart": "npm run connect-xchange",
+		"prestart": "npm run connect-xchange",
 		"start": "babel-node index.js",
 		"devserver": "nodemon ./index.js --exec babel-node",
 		"prodserver": "NODE_ENV=production pm2 start index.js --interpreter ./node_modules/babel-cli/bin/babel-node.js",

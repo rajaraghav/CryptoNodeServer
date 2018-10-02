@@ -30,39 +30,34 @@ passport.use(new JWTStrategy(
 
 		} catch (err) {
 
-			done(err, null);
+			return done(err, null);
 
 		}
 
 	}
 ));
-export const token = ({ required, roles = User.roles } = {}) => (
+/* eslint-disable*/
+export const token = ({ required, roles = ["user", "admin"] } = {}) => (
 	req,
 	res,
 	next
-) => passport.authenticate("token", { session: false }, (err, user, info) => {
-
-	if (
-		err ||
-			required && !user ||
-			required && !~roles.indexOf(user.role)
-	) {
-
-		return res.status(401).end();
-
-	}
-	req.logIn(user, { session: false }, (err) => {
-
-		if (err) {
-
+) =>
+	passport.authenticate("jwt", { session: false }, (err, user) => {
+		if (
+			err ||
+			(required && !user) ||
+			(required && !~roles.indexOf(user.role))
+		) {
 			return res.status(401).end();
-
 		}
-		next();
-
-	});
-
-})(req, res, next);
+		req.logIn(user, { session: false }, err => {
+			if (err) {
+				return res.status(401).end();
+			}
+			next();
+		});
+	})(req, res, next);
+/* eslint-enable*/
 passport.use(
 	"local-signup",
 	new LocalStrategy(
@@ -72,11 +67,36 @@ passport.use(
 			usernameField: "email"
 		},
 		/* eslint-disable max-params */
-
+		/* eslint-disable max-statements */
+		/* eslint-disable max-lines-per-function */
 		async (req, email, password, done) => {
 
 			try {
 
+				try {
+
+					if (
+						typeof req.body === "undefined" ||
+						typeof req.body.email === "undefined" ||
+						typeof req.body.password === "undefined" ||
+						typeof req.body.role === "undefined"
+					) {
+
+						return done(null, null);
+
+					}
+
+					if (req.body.role !== "admin" && req.body.role !== "user") {
+
+						return done(null, null);
+
+					}
+
+				} catch (ex) {
+
+					return done(null, null);
+
+				}
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
 
@@ -97,6 +117,7 @@ passport.use(
 						emailVerificationKey,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
+						role: req.body.role,
 						twofaSecret: speakEasyObj.value,
 						verified: false
 					};
@@ -113,7 +134,8 @@ passport.use(
 		}
 	)
 );
-
+/* eslint-enable max-statements */
+/* eslint-enable max-lines-per-function */
 passport.use(
 	"local-login",
 	new LocalStrategy(
@@ -127,10 +149,13 @@ passport.use(
 			try {
 
 				const existingUser = await User.findOne({ email });
-				console.log(existingUser);
 				if (existingUser) {
 
-					if (!existingUser.verified) {
+					/* eslint-disable no-undef */
+					console.log(process.env.NODE_ENV);
+					if (process.env.NODE_ENV === "production" && !existingUser.verified) {
+
+						/* eslint-enable no-undef */
 
 						return done(null, "user is not verified");
 
@@ -165,5 +190,6 @@ passport.use(
 			}
 
 		}
+		/* eslint-enable max-params */
 	)
 );

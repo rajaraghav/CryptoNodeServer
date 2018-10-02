@@ -145,7 +145,7 @@ module.exports = (app, passport) => {
 				currUser.password = hash;
 				await currUser.save();
 				console.log(currUser);
-				res.status(200);
+				res.status(200).end();
 
 			});
 

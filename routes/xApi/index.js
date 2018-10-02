@@ -1,8 +1,8 @@
-import { Router } from "express";
+
 import deposit from "./deposit";
 import trade from "./trade";
 
-const router = new Router();
+module.exports= (app)=>{
 //@apiDefine admin Admin access only
 /* You must pass `access_token` parameter or a Bearer Token authorization header
  * to access this endpoint.
@@ -18,7 +18,7 @@ const router = new Router();
  * You must pass `access_token` parameter or a Bearer Token authorization header
  * to access this endpoint. */
 
-router.use("/trade", trade);
-router.use("/deposit", deposit);
+app.use("/api/trade", trade);
+app.use("/api/deposit", deposit);
+}
 
-export default router;
