@@ -15,9 +15,9 @@
 		]
 	},
 	"scripts": {
-		"connect-xchange": "ssh dev1644@localhost -L 5005:192.168.18.45:8080 -N -f",
-		"predevserver": "npm run connect-xchange",
-		"preprodserver": "npm run connect-xchange",
+		"connect-xchange": "ssh Th3D4rKnight@localhost -L 5005:172.18.0.8:8080 -N -f",
+		"preddevserver": "npm run connect-xchange",
+		"preproddserver": "npm run connect-xchange",
 		"pretest": "npm run connect-xchange",
 		"prestart": "npm run connect-xchange",
 		"start": "babel-node index.js",
