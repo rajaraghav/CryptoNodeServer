@@ -16,7 +16,7 @@ function getFSYMS (reqCurrencies) {
 module.exports = (app) => {
 
 	app.get("/api/coindata", async (req, res) => {
-
+		console.log("GET /api/coindata",req.params,req.query);
 		let from = getFSYMS(req.query.from);
 		let to = getTSYMS(req.query.to);
 		console.log("from", from);
@@ -79,7 +79,7 @@ module.exports = (app) => {
 
 	});
 	app.get("/api/getCoinName", async (req, res) => {
-
+		console.log("GET /api/getCoinName",req.params,req.query);
 		res.send(allCoinsSyms[req.query.sym]);
 
 	});

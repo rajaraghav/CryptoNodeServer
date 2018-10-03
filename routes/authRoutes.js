@@ -18,64 +18,84 @@ module.exports = (app, passport) => {
 
 	app.post(
 		"/login",
-	//	requireCaptcha,
+		requireCaptcha,
 		passport.authenticate("local-login", { session: false }),
 		(req, res) => {
 
-			let currUser = {
-				email: req.user.email,
-				/* eslint-disable */
-				id: req.user._id,
-				xid: req.user.xid
-				/* eslint-enable */
-			};
-			const token = jwt.sign(currUser, keys.jwtKey, {
-				// define time here.
-				expiresIn: 48 * 60 * 60
-			});
-			res.status(200).json({
-				token,
-				user: currUser
-			});
+			console.log("POST /login", req.body);
+			if (typeof req.user.email === "undefined") {
+
+				console.log(req.user);
+				res.status(401).json({
+					responseError: req.user
+				});
+
+			} else {
+
+				let currUser = {
+					email: req.user.email,
+					/* eslint-disable */
+					id: req.user._id
+					/* eslint-enable */
+				};
+				const token = jwt.sign(currUser, keys.jwtKey, {
+					// define time here.
+					expiresIn: 48 * 60 * 60
+				});
+				res.status(200).json({
+					token,
+					user: currUser
+				});
+
+			}
 
 		}
 	);
 	app.post(
 		"/signup",
-		//requireCaptcha,
+		requireCaptcha,
 		passport.authenticate("local-signup", { session: false }),
 		(req, res) => {
 
-			const userId = req.user._id.toString();
-			try {
+			console.log("POST /signup", req.body);
+			if (typeof req.user._id === "undefined") {
 
-				request.post({
-					form: {
-						emailVerificationKey: req.user.emailVerificationKey,
-						userEmail: req.user.email,
-						userId
-					},
-					
-					headers:{"Connection": "keep-alive"},
-					url: `${keys.redirectClickUrl}/verifyEmail`
-				});
+				res.status(403).json({ responseError: req.user });
 
-			} catch (ex) {
+			} else {
 
-				console.log("request exception in signup");
-				res.status(500).json({ responseError: ex });
+				const userId = req.user._id.toString();
+				try {
+
+					request.post({
+						form: {
+							emailVerificationKey: req.user.emailVerificationKey,
+							userEmail: req.user.email,
+							userId
+						},
+						url: `${keys.redirectClickUrl}/verifyEmail`
+					});
+
+				} catch (ex) {
+
+					console.log("request exception in signup");
+					res.status(500).json({ responseError: ex });
+
+				}
+				res.status(200).json({ response: "signup successful." });
 
 			}
-			res.status(200).json({ response: "signup successful." });
 
 		}
 	);
 	app.post("/verify_2fa", (req, res) => {
 
+		console.log("POST /signup", req.body);
+
 		let userToken = req.body.googleToken;
 		let secret = req.user.twofaSecret;
 
-		var authObj = {
+		let authObj = {
 			encoding: "base32",
 			secret,
 			token: userToken
@@ -90,15 +110,17 @@ module.exports = (app, passport) => {
 
 		}
 
-	})
+	});
 	app.get("/api/verifyemail/:userId/:hash", (req, res) => {
 
-		res.status(200).send("Your email has been verified.").end();
+		console.log("POST /signup", req.query, req.params);
+		res.status(200).send("Your email has been verified.");
 
 	});
 
 	app.post("/api/changePassword/:token", async (req, res) => {
 
+		console.log("POST /api/changePassword/:token", req.body);
 		console.log(req.body.password);
 
 		try {
@@ -137,16 +159,16 @@ module.exports = (app, passport) => {
 	/* eslint-disable max-statements,max-len*/
 	app.post("/api/sendgrid/webhooks", async (req, res) => {
 
+		console.log("POST /api/sendgrid/webhooks", req.body);
 		if (
 			typeof req.body !== "undefined" ||
 			typeof req.body[0].url !== "undefined"
 		) {
 
 			const [{ url }] = req.body;
-			let regEmailPath;
 			try {
 
-				regEmailPath = new Path("/api/verifyemail/:userId/:hash");
+				let regEmailPath = new Path("/api/verifyemail/:userId/:hash");
 				const matchEmail = regEmailPath.test(new URL(url).pathname);
 				//const matchPassword = regPasswordPath.test(new URL(url).pathname);
 				if (matchEmail) {
@@ -160,23 +182,24 @@ module.exports = (app, passport) => {
 					}
 
 				}
-				res.send({}).end();
+				res.end();
 
 			} catch (ex) {
 
 				console.log("error in sengrid post path", ex, url);
-				res.send({}).end();
+				res.end();
 
 			}
 			//const regPasswordPath = new Path("/api/changepassword/:hash");
 
 		}
-		res.send({}).end();
+		res.end();
 
 	});
 	/* eslint-enable max-statements */
 	app.post("/verifyEmail", async (req, res) => {
 
+		console.log("POST /verifyEmail", req.body);
 		const verifier = {
 			body: "Please click the link below to complete registration.",
 			dateSent: Date.now(),
@@ -192,7 +215,8 @@ module.exports = (app, passport) => {
 		try {
 
 			await mailer.send();
-			res.status(200).send("done");
+			res.end();
+
 		} catch (err) {
 
 			console.log("error", err.response.body);
@@ -204,6 +228,7 @@ module.exports = (app, passport) => {
 	/* eslint-disable max-statements*/
 	app.post("/changepassword", async (req, res) => {
 
+		console.log("POST /changepassword", req.body);
 		const changer = {
 			body: "Please click the link below to change your password.",
 			dateSent: Date.now(),
@@ -225,12 +250,12 @@ module.exports = (app, passport) => {
 		try {
 
 			await mailer.send();
-			res.status(200).send({ response: "reset password mail sent." });
+			return res.status(200).send({ response: "reset password mail sent." });
 
 		} catch (err) {
 
 			console.log("error", err.response.body);
-			res.status(422).send(err);
+			return res.status(422).send(err);
 
 		}
 
@@ -241,6 +266,7 @@ module.exports = (app, passport) => {
 		requireCaptcha,
 		(req, res) => {
 
+			console.log("GET /get_twofaqr", req.params, req.query);
 			qrGenerator(
 				req.user.otpAuthUrl,
 				req.user.twofaSecret,

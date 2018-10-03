@@ -75,6 +75,7 @@ export default [
       maker_fee_rate: "0.0001"
     }
   },
+
   {
     name: "order.pending",
     role: "user",
@@ -83,6 +84,63 @@ export default [
       uid: check.Number,
       offset: check.Number,
       limit: check.Number
+    }
+  },
+  {
+    name: "market.user_deals",
+    role: "user",
+    tokens: ["uid", "market", "offset", "limit"],
+    handle: {
+      uid: check.Number,
+      offset: check.Number,
+      limit: check.Number
+    }
+  },
+  {
+    name: "order.finished",
+    role: "user",
+    tokens: [
+      "uid",
+      "market",
+      "start_time",
+      "end_time",
+      "offset",
+      "limit",
+      "side"
+    ],
+    handle: {
+      uid: check.Number,
+      side: check.Number,
+      start_time: check.Number,
+      end_time: check.Number,
+      offset: check.Number,
+      limit: check.Number
+
+      // ENUM([1, 2])
+    }
+  },
+  {
+    name: "order.cancel",
+    role: "user",
+    tokens: ["uid", "market", "order_id"],
+    handle: {
+      uid: check.Number,
+      order_id: check.Number
+
+      // ENUM([1, 2])
+    }
+  },
+  {
+    name: "order.put_market",
+    role: "user",
+    tokens: ["uid", "market", "side", "amount", "taker_fee_rate", "source"],
+    handle: {
+      uid: check.Number,
+      side: check.Number
+      // ENUM([1, 2])
+    },
+    predefined: {
+      taker_fee_rate: "0.0002"
     }
   },
   // public scope
@@ -145,5 +203,47 @@ export default [
     name: "depth.subscribe",
     role:"public",
     tokens:[]
+  {
+    name: "market.status",
+    role: "public",
+    tokens: ["market", "period"]
+  },
+  {
+    name: "market.kline",
+    role: "public",
+    tokens: ["market", "start", "end", "interval"],
+    handle: {
+      start: check.Number,
+      last: check.Number,
+      interval: check.Optional("0")
+    }
+  },
+  {
+    name: "order.pending_detail",
+    role: "public",
+    tokens: ["market", "order_id"],
+    handle: {
+      order_id: check.Number
+    }
+  },
+  {
+    name: "order.book",
+    role: "public",
+    tokens: ["market", "side", "offset", "limit"],
+    handle: {
+      side: check.Number,
+      offset: check.Number,
+      limit: check.Number
+    }
+  },
+  {
+    name: "order.deals",
+    role: "public",
+    tokens: ["order_id", "offset", "limit"],
+    handle: {
+      side: check.Number,
+      order_id: check.Number,
+      limit: check.Number
+    }
   }
 ];

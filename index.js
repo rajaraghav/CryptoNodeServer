@@ -9,7 +9,7 @@ const blockchain = require("./services/xServices/blockchain");
 /* eslint-disable */
 const server = require("http").Server(app);
 /* eslint-enable */
-
+console.log(process.env.NODE_ENV);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

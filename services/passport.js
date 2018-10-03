@@ -20,8 +20,8 @@ passport.use(new JWTStrategy(
 		try {
 
 			const user = await User.findOne({ _id: jwtPayload.id });
-
 			if (user) {
+
 				return done(null, user);
 
 			}
@@ -30,39 +30,34 @@ passport.use(new JWTStrategy(
 
 		} catch (err) {
 
-			done(err, null);
+			return done(err, null);
 
 		}
 
 	}
 ));
-export const token = ({ required, roles = ['user', 'admin'] } = {}) => (
+/* eslint-disable*/
+export const token = ({ required, roles = ["user", "admin"] } = {}) => (
 	req,
 	res,
 	next
-) => passport.authenticate("jwt", { session: false }, (err, user, info) => {
-
-	if (
-		err ||
-			required && !user ||
-			required && !~roles.indexOf(user.role)
-	) {
-
-		return res.status(401).end();
-
-	}
-	req.logIn(user, { session: false }, (err) => {
-
-		if (err) {
-
+) =>
+	passport.authenticate("jwt", { session: false }, (err, user) => {
+		if (
+			err ||
+			(required && !user) ||
+			(required && !~roles.indexOf(user.role))
+		) {
 			return res.status(401).end();
-
 		}
-		next();
-
-	});
-
-})(req, res, next);
+		req.logIn(user, { session: false }, err => {
+			if (err) {
+				return res.status(401).end();
+			}
+			next();
+		});
+	})(req, res, next);
+/* eslint-enable*/
 passport.use(
 	"local-signup",
 	new LocalStrategy(
@@ -72,26 +67,40 @@ passport.use(
 			usernameField: "email"
 		},
 		/* eslint-disable max-params */
-
+		/* eslint-disable max-statements */
+		/* eslint-disable max-lines-per-function */
 		async (req, email, password, done) => {
-				
+
 			try {
-				try{
-					if(typeof req.body==="undefined"||typeof req.body.email==="undefined"||typeof req.body.password==="undefined"||typeof req.body.role==="undefined")
-					return done(null,null);
-					
-					if(req.body.role!=="admin"&&req.body.role!=="user")
-					return done(null,null);
-					
-				}
-				catch(ex)
-				{					
-					return done(null,null)
+
+				try {
+
+					if (
+						typeof req.body === "undefined" ||
+						typeof req.body.email === "undefined" ||
+						typeof req.body.password === "undefined" ||
+						typeof req.body.role === "undefined"
+					) {
+
+						return done(null, null);
+
+					}
+
+					if (req.body.role !== "admin" && req.body.role !== "user") {
+
+						return done(null, null);
+
+					}
+
+				} catch (ex) {
+
+					return done(null, null);
+
 				}
 				const existingUser = await User.findOne({ email });
 				if (existingUser) {
 
-					return done(null, false);
+					return done(null, "user already exists");
 
 				}
 				bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -106,9 +115,9 @@ passport.use(
 					let newUser = {
 						email,
 						emailVerificationKey,
-						role:req.body.role,
 						otpAuthUrl: speakEasyObj.otpAuthURL,
 						password: hash,
+						role: req.body.role,
 						twofaSecret: speakEasyObj.value,
 						verified: false
 					};
@@ -118,14 +127,15 @@ passport.use(
 
 			} catch (err) {
 
-				return done(err, null);
+				return done(null, err);
 
 			}
 
 		}
 	)
 );
-
+/* eslint-enable max-statements */
+/* eslint-enable max-lines-per-function */
 passport.use(
 	"local-login",
 	new LocalStrategy(
@@ -139,24 +149,27 @@ passport.use(
 			try {
 
 				const existingUser = await User.findOne({ email });
-				
 				if (existingUser) {
-					console.log(process.env.NODE_ENV)
-					if (process.env.NODE_ENV==='production'&&!existingUser.verified) {
 
-						return done(null, false);
+					/* eslint-disable no-undef */
+					console.log(process.env.NODE_ENV);
+					if (process.env.NODE_ENV === "production" && !existingUser.verified) {
+
+						/* eslint-enable no-undef */
+
+						return done(null, "user is not verified");
 
 					}
 					bcrypt.compare(password, existingUser.password, (err, res) => {
 
 						if (err) {
 
-							return done(err, null);
+							return done(null, err);
 
 						}
 						if (!res) {
 
-							return done(null, false);
+							return done(null, "password does not match");
 
 						}
 
@@ -166,16 +179,17 @@ passport.use(
 
 				} else {
 
-					return done(null, false);
+					return done(null, "user does not exist");
 
 				}
 
 			} catch (err) {
 
-				done(err, null);
+				return done(null, err);
 
 			}
 
 		}
+		/* eslint-enable max-params */
 	)
 );
