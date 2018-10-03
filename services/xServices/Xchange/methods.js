@@ -133,5 +133,17 @@ export default [
     name: "market.summary",
     role: "public",
     tokens: ["market"]
+  },
+
+  //ws methods
+  {
+    name: "server.ping",
+    role:"public",
+    tokens:[]
+  },
+  {
+    name: "depth.subscribe",
+    role:"public",
+    tokens:[]
   }
 ];
