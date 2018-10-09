@@ -4,7 +4,7 @@ let socketClient = require("./streamer");
 
 const io = (socketIo) => {
 
-	
+
 	/* Server socket emits data to it's react clients on recieving data
 	   from cryptoCompare socket connection.
 	   These are the events you can listen to.

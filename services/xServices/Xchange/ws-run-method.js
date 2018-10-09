@@ -1,6 +1,11 @@
 const WebSocket = require("ws");
 let callId = 0;
 let wsUrl = "ws://localhost:8888";
+if (process.env.NODE_ENV === "production") {
+
+	wsUrl = "ws://localhost/xws";
+
+}
 let ws = null;
 let socketServer = null;
 let startWs = (onready, onmessage) => {
