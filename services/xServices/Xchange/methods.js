@@ -192,22 +192,38 @@ export default [
     role: "public",
     tokens: ["market"]
   },
+  {
+    name: "order.finished_detail",
+    role: "public",
+    tokens: ["order_id"],
+    handle: {
+      order_id: check.Number
+    }
+  },
 
   //ws methods
   {
     name: "server.ping",
-    role:"public",
-    tokens:[]
+    role: "public",
+    tokens: []
   },
   {
     name: "depth.subscribe",
+<<<<<<< HEAD
     role:"public",
     tokens:[]
+=======
+    role: "public",
+    tokens: []
+>>>>>>> 42805f2be75d00dc12bbb649abba9e62b50b08a5
   },
   {
     name: "market.status",
     role: "public",
-    tokens: ["market", "period"]
+    tokens: ["market", "period"],
+    handle: {
+      period: check.Number
+    }
   },
   {
     name: "market.kline",
@@ -215,8 +231,8 @@ export default [
     tokens: ["market", "start", "end", "interval"],
     handle: {
       start: check.Number,
-      last: check.Number,
-      interval: check.Optional("0")
+      end: check.Number,
+      interval: check.Number
     }
   },
   {
