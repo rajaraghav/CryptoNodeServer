@@ -1,6 +1,18 @@
-const socket = require('socket.io-client')("http://localhost:8888")
+var websocket = require('websocket');
 
-socket.on('connection',(socket)=>{
-    console.log(socket);
-})
-console.log(socket.emit("DAJ"))
+
+
+
+// ws.on('open', function() {
+//   // call an RPC method with parameters
+//   console.log("opened ws");
+//   var msg = JSON.stringify({id: 1, method: 'server.ping', params: []});
+//   ws.send(msg);
+//   // close a websocket connection
+// })
+// ws.on('message',function(ev){
+// console.log(ev);
+// })
+// ws.on('error',function(ev){
+//     console.log(ev); 
+// })

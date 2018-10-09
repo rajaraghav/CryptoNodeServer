@@ -203,6 +203,7 @@ export default [
     name: "depth.subscribe",
     role:"public",
     tokens:[]
+  },
   {
     name: "market.status",
     role: "public",

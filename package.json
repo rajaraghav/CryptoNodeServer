@@ -17,7 +17,7 @@
 	"scripts": {
 		"connect-xchange": "ssh raja@localhost -L 5005:192.168.18.45:8080 -N -f",
 		"connect-wsXchange": "ssh raja@localhost -L 5006:192.168.18.45:8090 -N -f",
-		"predevserver": "npm run connect-xchange",
+		"predevsserver": "npm run connect-xchange",
 		"preprodserver": "npm run connect-xchange",
 		"pretest": "npm run connect-xchange",
 		"prestart": "npm run connect-xchange",
@@ -68,6 +68,7 @@
 		"rand-token": "^0.4.0",
 		"request": "^2.88.0",
 		"request-promise": "^4.2.2",
+		"rpc-websockets": "^4.3.3",
 		"safe-buffer": "^5.1.2",
 		"sendgrid": "^5.2.3",
 		"socket.io": "^2.1.1",
@@ -76,7 +77,8 @@
 		"speakeasy": "^2.0.0",
 		"superagent": "^4.0.0-beta.5",
 		"typedarray-to-buffer": "^3.1.5",
-		"web3": "^1.0.0-beta.36"
+		"web3": "^1.0.0-beta.36",
+		"websocket": "^1.0.28"
 	},
 	"author": "Raja",
 	"license": "ISC",
