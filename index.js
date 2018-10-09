@@ -25,6 +25,7 @@ const redisAdapter = socketRedis({
 	host: keys.redisHost,
 	port: keys.redisPort
 });
+io.adapter(redisAdapter);
 /* eslint-enable */
 
 mongoose.Promise = global.Promise;
@@ -33,7 +34,8 @@ mongoose.connect(
 	{ useNewUrlParser: true }
 );
 //socket io cluster config ends here.
-require("./services/socket").default(io, redisAdapter);
+require("./services/socket").default(io);
+require("./services/xServices/Xchange/ws-run-method").xchangeWs(io);
 require("./model/user");
 require("./services/passport");
 //cors setting

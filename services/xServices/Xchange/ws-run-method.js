@@ -1,27 +1,26 @@
-import { checkMethod } from "./check-method";
-
 const WebSocket = require("ws");
 let callId = 0;
 let wsUrl = "ws://localhost:8888";
 let ws = null;
-function start_ws (onready, onmessage) {
+let socketServer = null;
+let startWs = (onready, onmessage) => {
 
-	var created_ws = false;
-	if (ws == null || ws.readyState != 1) {
+	var createdWs = false;
+	if (ws === null || ws.readyState !== 1) {
 
 		ws = new WebSocket(wsUrl);
-		created_ws = true;
+		createdWs = true;
 
 	}
 	ws.on("open", (event) => {
 
-		console.log(`opened ws to '${wsUrl}'`);
+		console.log(`opened ws to '${wsUrl}'`, event);
 		onready(ws);
 
 	});
 	ws.on("message", (event) => {
 
-		onmessage(ws, event);
+		onmessage(event);
 
 	});
 	ws.on("error", (event) => {
@@ -34,22 +33,18 @@ function start_ws (onready, onmessage) {
 		console.log(`ws closed (${event.code})`);
 
 	});
-	if (!created_ws) {
+	if (!createdWs) {
 
 		onready(ws);
 
 	}
 
-}
+};
+let callWsServer = (payload) => {
 
-function call_ws_server (payload) {
-
-	callId++;
-	let params = payload.params;
-	let method = payload.method;
-	console.log(method);
-	console.log(params);
-	return start_ws(
+	callId += 1;
+	let { params, method, socketId } = payload;
+	startWs(
 		(sock) => {
 
 			var req = JSON.stringify({
@@ -60,31 +55,47 @@ function call_ws_server (payload) {
 			sock.send(req);
 
 		},
-		(sock, data) => {
+		(data) => {
 
 			console.log(data);
+			socketServer.to(socketId).emit("xresponse", data);
 
 		}
 	);
 
-}
-
-export const wsRunMethod = async (
+};
+/* eslint-disable max-params*/
+export const wsRunMethod = (
 	method,
-	_payload,
+	params,
+	socketId,
 	role = "public",
 	opts = {}
 ) => {
 
-	console.log(method, _payload, role, opts);
-	const params = checkMethod(method, _payload, role, opts);
+	/* eslint-enable max-params*/
+	console.log(method, params, socketId, role, opts);
 
 	const payload = {
 		method,
-		params: params || []
+		params: params || [],
+		socketId
 	};
-	console.log("payload", payload);
+	callWsServer(payload);
 
-	return call_ws_server(payload).then((json) => JSON.parse(json.text));
+};
+export const xchangeWs = (io) => {
+
+	socketServer = io;
+	socketServer.on("connection", (socket) => {
+
+		socket.on("wsx", (dat) => {
+
+			console.log(dat);
+			wsRunMethod(dat.method, dat.params, socket.id);
+
+		});
+
+	});
 
 };

@@ -2,12 +2,9 @@
 let CCC = require("./cccStreamerUtilities");
 let socketClient = require("./streamer");
 
-const io = (socketIo, redisAdapter) => {
+const io = (socketIo) => {
 
-	//Server Socket Settings
-	socketIo.adapter(redisAdapter);
-	//Server socket Settings end.
-
+	
 	/* Server socket emits data to it's react clients on recieving data
 	   from cryptoCompare socket connection.
 	   These are the events you can listen to.
@@ -28,9 +25,10 @@ const io = (socketIo, redisAdapter) => {
     	"TRADECATCHUPCOMPLETE",
     	"NEWSCATCHUPCOMPLETE"
 	*/
+
 	socketIo.on("connection", (socket) => {
 
-		console.log("connected to", socket);
+		console.log("connected to");
 
 	});
 	socketClient.on("m", (data) => {

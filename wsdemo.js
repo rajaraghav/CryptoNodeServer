@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 let ngHost = "wss://echo.websocket.org";
 
 var WebSocketClient = require("websocket").client;
@@ -52,3 +53,11 @@ client.connect(
 	null,
 	null
 );
+=======
+
+const io = require("socket.io-client"),
+ioClient = io.connect("http://localhost:9000");
+
+ioClient.on("xresponse", (msg) => console.info(msg));
+ioClient.emit('wsx',{method:"server.ping"});
+>>>>>>> 3cf4fd4a27d65ad0a2852358fab4fdaf5259497a

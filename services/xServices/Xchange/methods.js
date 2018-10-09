@@ -1,7 +1,7 @@
 const check = {
+	ENUM: (list) => (a) => list.includes(a) ? a : false,
 	Number: (a) => Number.isNaN(Number(a)) ? false : Number(a),
-	Optional: (defaultValue) => (a) => a || defaultValue,
-	ENUM: (list) => (a) => list.includes(a) ? a : false
+	Optional: (defaultValue) => (a) => a || defaultValue
 };
 export default [
 	// ADMIN ONLY
