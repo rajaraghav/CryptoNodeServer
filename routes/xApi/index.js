@@ -1,7 +1,7 @@
 
 import deposit from "./deposit";
 import trade from "./trade";
-
+import ws from "./ws";
 module.exports= (app)=>{
 //@apiDefine admin Admin access only
 /* You must pass `access_token` parameter or a Bearer Token authorization header
@@ -20,5 +20,6 @@ module.exports= (app)=>{
 
 app.use("/api/trade", trade);
 app.use("/api/deposit", deposit);
+app.use("/api/ws", ws);
 }
 
