@@ -209,13 +209,8 @@ export default [
   },
   {
     name: "depth.subscribe",
-<<<<<<< HEAD
     role:"public",
     tokens:[]
-=======
-    role: "public",
-    tokens: []
->>>>>>> 42805f2be75d00dc12bbb649abba9e62b50b08a5
   },
   {
     name: "market.status",

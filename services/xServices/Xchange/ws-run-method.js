@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 let call_id = 0; 
 let ws_url = 'ws://localhost:8888';
 let ws = null; 
-
+let socketServer = null;
 function start_ws(onready, onmessage) {
     var created_ws = false;
     if (ws == null || ws.readyState != 1) {
@@ -17,7 +17,8 @@ function start_ws(onready, onmessage) {
         onready(ws);
     })
     ws.on('message' , function(event) {
-        onmessage(ws, event);
+        onmessage(event);
+
     })
     ws.on('error' , function(event) {
         console.log("ws error (" + event + ")");
@@ -30,36 +31,46 @@ function start_ws(onready, onmessage) {
 }
 
 function call_ws_server(payload) {
-    call_id++;
-    let params = payload.params;
-    let method = payload.method;
-    console.log(method);
-    console.log(params);
-    start_ws(
+    call_id++; 
+    let {params,method,socketId}=payload;
+
+        start_ws(
         function (sock) {
             var req = JSON.stringify({id: call_id, method: method, params: params});
             sock.send(req);
         },
-        function (sock, data) {
+        function (data) {
             console.log(data);
+            socketServer.to(socketId).emit('xresponse',data);
            // var obj = JSON.parse(data);
           //  console.log(obj);
         }
-    );
+    )
+
 }
 
 
-export const wsRunMethod = async (method, _payload, role = 'public', opts = {}) => {
-  console.log(method,_payload,role,opts)
-  const params = checkMethod(method, _payload, role, opts)
-
+export const wsRunMethod = async (method, params,socketId, role = 'public', opts = {}) => {
+  console.log(method,params,role,opts)
+  
   const payload = {
     method,
-    params: params || []
+    params: params || [],
+    socketId
   }
 
   console.log('payload', payload)
 
-  return call_ws_server(payload)
-    .then(json => JSON.parse(json.text))
+  call_ws_server(payload);
 }
+export const xchangeWs = function (io)
+ {
+     socketServer = io;
+     socketServer.on('connection',socket=>{
+         socket.on('wsx',dat=>{
+             console.log(dat);
+            wsRunMethod(dat.method,dat.params,socket.id)
+         })
+     })
+ }
+ 
