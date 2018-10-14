@@ -17,7 +17,7 @@ const passwordTemplate = require("../services/emailTemplates/passwordTemplates")
 module.exports = (app, passport) => {
   app.post(
     "/login",
-    requireCaptcha,
+    //requireCaptcha,
     passport.authenticate("local-login", { session: false }),
     (req, res) => {
       console.log("POST /login", req.body);
@@ -216,6 +216,16 @@ module.exports = (app, passport) => {
           });
         }
       );
+    }
+  );
+
+  app.get(
+    "/verifyToken",
+    passport.authenticate("verifyJWT", { session: false }),
+    (req, res) => {
+      res
+        .status(200)
+        .send({ code: 0, message: null, data: { user_id: req.user.xid } });
     }
   );
 };
