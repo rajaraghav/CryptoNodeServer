@@ -11,7 +11,7 @@ const keys = require("../config/keys");
 const saltRounds = 10;
 const User = mongoose.model("Users");
 
-passport.use("verifyJWT",
+passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),

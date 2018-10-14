@@ -221,7 +221,7 @@ module.exports = (app, passport) => {
 
   app.get(
     "/verifyToken",
-    passport.authenticate("verifyJWT", { session: false }),
+    passport.authenticate("jwt", { session: false }),
     (req, res) => {
       res
         .status(200)
