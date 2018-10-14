@@ -25,6 +25,7 @@ module.exports = (app, passport) => {
     passport.authenticate("local-login", { session: false }),
     (req, res) => {
       console.log("POST /login", req.body);
+      console.log(req.user);
       if (typeof req.user.email === "undefined") {
         console.log(req.user);
         res.status(401).json({
@@ -34,7 +35,9 @@ module.exports = (app, passport) => {
         let currUser = {
           email: req.user.email,
           /* eslint-disable */
-          id: req.user._id
+          id: req.user._id,
+          xid: req.user.xid
+
           /* eslint-enable */
         };
         const token = jwt.sign(currUser, keys.jwtKey, {
