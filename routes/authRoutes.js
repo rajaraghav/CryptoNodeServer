@@ -14,10 +14,14 @@ const User = mongoose.model("Users");
 const verifyTemplate = require("../services/emailTemplates/verifyTemplates");
 const passwordTemplate = require("../services/emailTemplates/passwordTemplates");
 /* eslint-disable max-lines-per-function */
-module.exports = (app, passport) => {
+module.exports = (app, passport) => {  
+  app.get("/xauth",passport.authenticate("jwt", { session: false }),(req,res)=>{
+    console.log("hittin");
+    console.info(req.user);
+  })
   app.post(
     "/login",
-    requireCaptcha,
+    //requireCaptcha,
     passport.authenticate("local-login", { session: false }),
     (req, res) => {
       console.log("POST /login", req.body);
@@ -46,7 +50,7 @@ module.exports = (app, passport) => {
   );
   app.post(
     "/signup",
-    requireCaptcha,
+    //requireCaptcha,
     passport.authenticate("local-signup", { session: false }),
     (req, res) => {
       console.log("POST /signup", req.body);
