@@ -1,8 +1,8 @@
 import bitcoinjs from 'bitcoinjs-lib'
-import bip32 from 'bip32'
+import bip32 from 'bip32';
+// import bip39 from"bip39";
 import hdkey from 'hdkey'
 import BigNumber from 'bignumber.js'
-
 import bitcoin from './bitcoin'
 import ethereum, { web3 } from './ethereum'
 

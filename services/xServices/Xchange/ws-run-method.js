@@ -10,7 +10,7 @@ let ws = null;
 let socketServer = null;
 let startWs = (onready, onmessage) => {
 
-	var createdWs = false;
+	let createdWs = false;
 	if (ws === null || ws.readyState !== 1) {
 
 		ws = new WebSocket(wsUrl);
@@ -45,14 +45,14 @@ let startWs = (onready, onmessage) => {
 	}
 
 };
-let callWsServer = (payload) => {
+const callWsServer = (payload) => {
 
 	callId += 1;
 	let { params, method, socketId } = payload;
 	startWs(
 		(sock) => {
 
-			var req = JSON.stringify({
+			let req = JSON.stringify({
 				id: callId,
 				method,
 				params
