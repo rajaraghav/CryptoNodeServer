@@ -15,8 +15,8 @@
 		]
 	},
 	"scripts": {
-		"connect-xchange": "ssh tft@localhost -L 5005:192.168.18.45:8080 -N -f",
-		"connect-wsXchange": "ssh tft@localhost -L 5006:192.168.18.45:8090 -N -f",
+		"connect-xchange": "ssh dev1644@localhost -L 5005:192.168.18.45:8080 -N -f",
+		"connect-wsXchange": "ssh dev1644@localhost -L 5006:192.168.18.45:8090 -N -f",
 		"predevsserver": "npm run connect-xchange",
 		"preprodserver": "npm run connect-xchange",
 		"pretest": "npm run connect-xchange",
