@@ -24,49 +24,50 @@ export const checkMethod = (action, payload, role, options) => {
 
     if (_authToken) {
       console.warn(
-        `USER DATA contained uid=${payload.authToken}, while his uid=${authToken}`
+        `USER DATA contained uid=${
+          payload.authToken
+        }, while his uid=${authToken}`
       );
     }
 
     payload = { authToken, ...others };
-}
-    if (method.tokens.includes("business_id") && options.opid) {
-        payload = { ...payload, business_id: options.opid };
-      }
-    
+  }
+  if (method.tokens.includes("business_id") && options.opid) {
+    payload = { ...payload, business_id: options.opid };
+  }
 
-    
-      const keys = Object.keys(payload);
-    
-      console.log("inside check keys", keys);
-    
-      return method.tokens.map((token, index) => {
-        console.log("In Map");
-    
-        if (token !== keys[index]) {
-          throw new XError(401, `Wrong keys: [${keys}] / [${method.tokens}]`);
-        }
-    
-        if (method.handle !== undefined) {
-          const handle = method.handle[token];
-    
-          const value = payload[token];
-    
-          console.log("inside check handle", handle, value);
-          const newValue = handle ? handle(value) : value;
-          console.log("inside check newValue", newValue);
-          if (newValue === false || newValue === undefined) {
-            throw new XError(
-              401,
-              `Wrong value at key [${token}] from value [${value}]`
-            );
-          } else {
-            return newValue;
-          }
-        } else {
-          console.log("Returning", payload[token]);
-          return payload[token];
-        }
-      });
+  const keys = Object.keys(payload);
+
+  console.log("inside check keys", keys);
+
+  
+
+  return method.tokens.map((token, index) => {
+    console.log("In Map");
+
+    if (token !== keys[index]) {
+      throw new XError(401, `Wrong keys: [${keys}] / [${method.tokens}]`);
+    }
+
+    if (method.handle !== undefined) {
+      const handle = method.handle[token];
+
+      const value = payload[token];
+
+      console.log("inside check handle", handle, value);
+      const newValue = handle ? handle(value) : value;
+      console.log("inside check newValue", newValue);
+      if (newValue === false || newValue === undefined) {
+        throw new XError(
+          401,
+          `Wrong value at key [${token}] from value [${value}]`
+        );
+      } else {
+        return newValue;
+      }
+    } else {
+      console.log("Returning", payload[token]);
+      return payload[token];
+    }
+  });
 };
-    

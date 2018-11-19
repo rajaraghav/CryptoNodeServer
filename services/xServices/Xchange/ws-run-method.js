@@ -1,6 +1,8 @@
 const WebSocket = require("ws");
 let callId = 0;
-let wsUrl = "ws://localhost:8888";
+// let wsUrl = "ws://127.0.0.1:8888";
+let wsUrl = "ws://localhost:18090"
+
 import { checkMethod } from "./ws-check-method";
 
 if (process.env.NODE_ENV === "production") {
@@ -39,6 +41,8 @@ let callWsServer = payload => {
     sock => {
       let params = checkMethod(method, _params, role);
 
+      console.log(params,method,_params,role);
+
       var req = JSON.stringify({
         id: callId,
         method,
@@ -76,7 +80,7 @@ export const xchangeWs = io => {
   socketServer.on("connection", socket => {
     socket.on("wsx", dat => {
       console.log(dat);
-      wsRunMethod(dat.method, dat.params, socket.id, dat.role);
+      wsRunMethod(dat.method, dat.params, socket.id, dat.role,dat.opts);
     });
   });
 };

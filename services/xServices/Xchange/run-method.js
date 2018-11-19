@@ -2,7 +2,7 @@ import request from "superagent";
 
 import { checkMethod } from "./check-method";
 
-const EXCHANGE_API = `http://localhost:5005`;
+const EXCHANGE_API = `http://localhost:18080`;
 
 const BASE_PARAMS = {
   jsonrpc: "2.0",
