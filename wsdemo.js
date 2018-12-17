@@ -25,9 +25,5 @@ ioClient.emit("wsx", {
 // ioClient.emit("wsx", {
 //   method: "server.ping",
 //   role: "server"
-  
- 
+
 // });
-
-
-

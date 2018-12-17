@@ -1,26 +1,28 @@
-import { updateBalance } from './wallet'
+import { updateBalance } from "./wallet";
 
-let update
-let listening = []
+let update;
+let listening = [];
 
-export const stop = () => clearInterval(update)
+export const stop = () => clearInterval(update);
 export const listen = (xid, currency) => {
-  const isListening = listening.filter(sub => sub.xid === xid && sub.currency === currency)
+  const isListening = listening.filter(
+    sub => sub.xid === xid && sub.currency === currency
+  );
 
   if (isListening.length) {
-    return
+    return;
   }
 
-  console.log(`start listening ${xid} ${currency}`)
-  listening.push({ xid, currency })
-}
+  console.log(`start listening ${xid} ${currency}`);
+  listening.push({ xid, currency });
+};
 
 export default () => {
   update = setInterval(() => {
     listening.forEach(async ({ xid, currency }, index) => {
-      const updates = await updateBalance(currency, xid)
+      const updates = await updateBalance(currency, xid);
 
-      console.log('updates for ' + xid, updates)
-    })
-  }, 5000)
-}
+      console.log("updates for " + xid, updates);
+    });
+  }, 5000);
+};

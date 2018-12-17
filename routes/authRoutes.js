@@ -46,7 +46,7 @@ module.exports = (app, passport) => {
   );
   app.post(
     "/signup",
-    requireCaptcha,
+    //requireCaptcha,
     passport.authenticate("local-signup", { session: false }),
     (req, res) => {
       console.log("POST /signup", req.body);
